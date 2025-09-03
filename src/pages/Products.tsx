@@ -13,15 +13,11 @@ interface Product {
   name: string;
   description?: string;
   origin_location?: string;
-  farming_method?: string;
+  sustainability_info?: string;
   photo_url?: string;
   harvest_date?: string;
+  producer_video_url?: string;
   certifications: any;
-  profiles: {
-    first_name?: string;
-    last_name?: string;
-    company_name?: string;
-  };
 }
 
 export default function Products() {
@@ -53,15 +49,11 @@ export default function Products() {
           name,
           description,
           origin_location,
-          farming_method,
+          sustainability_info,
           photo_url,
           harvest_date,
-          certifications,
-          profiles (
-            first_name,
-            last_name,
-            company_name
-          )
+          producer_video_url,
+          certifications
         `)
         .eq('status', 'active')
         .order('created_at', { ascending: false });
@@ -197,8 +189,7 @@ export default function Products() {
                       
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-foreground">
-                          {product.profiles?.company_name || 
-                           `${product.profiles?.first_name} ${product.profiles?.last_name}`}
+                          Producteur certifié
                         </span>
                         {product.harvest_date && (
                           <div className="flex items-center gap-1">
@@ -208,9 +199,9 @@ export default function Products() {
                         )}
                       </div>
 
-                      {product.farming_method && (
+                      {product.sustainability_info && (
                         <Badge variant="secondary" className="text-xs">
-                          {product.farming_method}
+                          {product.sustainability_info}
                         </Badge>
                       )}
                     </div>
