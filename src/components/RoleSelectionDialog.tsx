@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Factory, Building, PenTool } from "lucide-react";
+import { Users, Factory, Building, PenTool, Scan } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface RoleSelectionDialogProps {
@@ -23,28 +23,28 @@ export function RoleSelectionDialog({ open, onOpenChange }: RoleSelectionDialogP
     {
       id: 'consumer',
       title: 'Consommateur',
-      description: 'Scanner et découvrir les produits',
-      icon: Users,
+      description: 'Scannez et découvrez l\'origine de vos produits',
+      icon: Scan,
       path: '/consumer'
     },
     {
       id: 'producer',
       title: 'Producteur / Coopérative',
-      description: 'Gérer mes produits agricoles',
+      description: 'Gérez vos produits et leur traçabilité',
       icon: Factory,
       path: '/producer'
     },
     {
       id: 'distributor',
       title: 'Distributeur / Entreprise',
-      description: 'Accéder aux données de traçabilité',
+      description: 'Accédez aux données de traçabilité',
       icon: Building,
       path: '/distributor'
     },
     {
       id: 'blog',
       title: 'Écrire un article',
-      description: 'Rédiger pour le blog NaturaLink',
+      description: 'Partagez vos connaissances avec la communauté',
       icon: PenTool,
       path: '/blog/create'
     }
