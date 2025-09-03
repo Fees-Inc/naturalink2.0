@@ -268,7 +268,9 @@ export type Database = {
           first_name: string | null
           id: string
           is_verified: boolean | null
+          kyc_status: string | null
           last_name: string | null
+          location: string | null
           phone: string | null
           role: Database["public"]["Enums"]["user_role"] | null
           subscription_end: string | null
@@ -285,7 +287,9 @@ export type Database = {
           first_name?: string | null
           id?: string
           is_verified?: boolean | null
+          kyc_status?: string | null
           last_name?: string | null
+          location?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           subscription_end?: string | null
@@ -302,7 +306,9 @@ export type Database = {
           first_name?: string | null
           id?: string
           is_verified?: boolean | null
+          kyc_status?: string | null
           last_name?: string | null
+          location?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           subscription_end?: string | null
@@ -403,7 +409,7 @@ export type Database = {
         | "innovations"
         | "actualites"
       article_status: "brouillon" | "publie" | "archive"
-      user_role: "producer" | "distributor" | "admin"
+      user_role: "producer" | "distributor" | "admin" | "consumer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -539,7 +545,7 @@ export const Constants = {
         "actualites",
       ],
       article_status: ["brouillon", "publie", "archive"],
-      user_role: ["producer", "distributor", "admin"],
+      user_role: ["producer", "distributor", "admin", "consumer"],
     },
   },
 } as const

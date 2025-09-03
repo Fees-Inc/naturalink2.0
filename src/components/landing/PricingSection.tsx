@@ -3,9 +3,11 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Check, Users, Building, Factory } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function PricingSection() {
   const [selectedPlan, setSelectedPlan] = useState("producers");
+  const navigate = useNavigate();
 
   const plans = [
     {
@@ -26,6 +28,7 @@ export function PricingSection() {
       ],
       cta: "Accéder",
       variant: "outline",
+      action: () => navigate('/consumer'),
       popular: false
     },
     {
@@ -51,6 +54,7 @@ export function PricingSection() {
       ],
       cta: "Acheter",
       variant: "hero",
+      action: () => navigate('/producer/purchase'),
       popular: true
     },
     {
@@ -71,6 +75,7 @@ export function PricingSection() {
       ],
       cta: "Souscrire",
       variant: "nature",
+      action: () => navigate('/distributor/subscribe'),
       popular: false
     }
   ];
@@ -156,6 +161,7 @@ export function PricingSection() {
                     variant={plan.variant as any} 
                     size="lg" 
                     className="w-full"
+                    onClick={plan.action}
                   >
                     {plan.cta}
                   </Button>

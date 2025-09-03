@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Shield, Leaf } from "lucide-react";
+import { RoleSelectionDialog } from "@/components/RoleSelectionDialog";
+import { useState } from "react";
 import heroImage from "@/assets/hero-agriculture.jpg";
 
 export function HeroSection() {
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background with gradient overlay */}
@@ -32,8 +35,13 @@ export function HeroSection() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-              <Button variant="accent" size="lg" className="text-lg">
-                Découvrir NaturaLink
+              <Button 
+                variant="accent" 
+                size="lg" 
+                className="text-lg"
+                onClick={() => setShowRoleDialog(true)}
+              >
+                Commencer
               </Button>
               <Button variant="outline" size="lg" className="text-lg border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 Voir la démonstration
@@ -90,6 +98,11 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+
+      <RoleSelectionDialog 
+        open={showRoleDialog} 
+        onOpenChange={setShowRoleDialog} 
+      />
     </section>
   );
 }
