@@ -10,14 +10,13 @@ import { useNavigate } from "react-router-dom";
 export default function Distributor() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+useEffect(() => {
+// Rediriger seulement si un utilisateur est connecté avec un autre rôle
+if (user && profile && profile.role !== "distributor") {
+  navigate(`/${profile.role}`);
+}
+}, [user, profile, navigate]);
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-    } else if (profile && profile.role !== 'distributor') {
-      navigate(`/${profile.role}`);
-    }
-  }, [user, profile, navigate]);
 
   const stats = [
     { label: "Produits Suivis", value: "1,247", icon: BarChart3 },

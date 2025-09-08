@@ -12,9 +12,8 @@ export default function Producer() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-    } else if (profile && profile.role !== 'producer') {
+    // Seulement si l’utilisateur est connecté ET n’a pas le bon rôle
+    if (user && profile && profile.role !== "producer") {
       navigate(`/${profile.role}`);
     }
   }, [user, profile, navigate]);

@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import nfcProductImage from "@/assets/nfc-product.jpg";
 
-export function FeaturedProductsSection() {
+export function FeaturedProductersSection() {
 const products = [
   {
     name: "Cacao",
@@ -123,7 +123,9 @@ const products = [
             Voir tous nos produits
           </Button>
         </div>
+        
       </div>
+      
     </section>
   );
 }

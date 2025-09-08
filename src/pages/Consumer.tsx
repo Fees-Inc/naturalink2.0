@@ -15,10 +15,8 @@ export default function Consumer() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect non-consumers or non-authenticated users
-    if (!user) {
-      navigate('/auth');
-    } else if (profile && profile.role !== 'consumer') {
+    // Seulement rediriger si l’utilisateur est connecté mais n’a pas le bon rôle
+    if (profile && user && profile.role !== "consumer") {
       navigate(`/${profile.role}`);
     }
   }, [user, profile, navigate]);

@@ -7,6 +7,11 @@ import { PricingSection } from "@/components/landing/PricingSection";
 import { StatsSection } from "@/components/landing/StatsSection";
 import { NewsletterSection } from "@/components/landing/NewsletterSection";
 import { Footer } from "@/components/landing/Footer";
+import { FeaturedProductersSection } from "@/components/landing/FeaturedProductersSection";
+import ProducersList from "./ProductersList";
+import { FeatureEntreprisesSections } from "@/components/landing/FeatureEntreprisesSections";
+import PartnersSection from "./PartnersSection";
+
 
 const Index = () => {
   return (
@@ -16,6 +21,8 @@ const Index = () => {
       <TrustSection />
       <StorySection />
       <FeaturedProductsSection />
+      <ProducersList />
+      <PartnersSection />
       <PricingSection />
       <StatsSection />
       <NewsletterSection />
