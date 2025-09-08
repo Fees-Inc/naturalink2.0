@@ -11,7 +11,7 @@ import { FeaturedProductersSection } from "@/components/landing/FeaturedProducte
 import ProducersList from "./ProductersList";
 import { FeatureEntreprisesSections } from "@/components/landing/FeatureEntreprisesSections";
 import PartnersSection from "./PartnersSection";
-import { FeaturesSectionWithCardGradient } from "@/components/ui/feature-section-with-card-gradient";
+import { FeatureSectionWithBentoGrid } from "@/components/ui/feature-section-with-bento-grid";
 
 
 const Index = () => {
@@ -24,7 +24,7 @@ const Index = () => {
       <FeaturedProductsSection />
       <ProducersList />
       <PartnersSection />
-      <FeaturesSectionWithCardGradient />
+      <FeatureSectionWithBentoGrid />
       <PricingSection />
       <StatsSection />
       <NewsletterSection />
