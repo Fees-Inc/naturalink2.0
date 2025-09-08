@@ -1,4 +1,4 @@
-import { User, Leaf, Package, Shield, Map, MessageCircle, BarChart3, Truck, QrCode, Star, Bell, Users } from "lucide-react";
+import { User, Leaf, Package, Shield, Map, MessageCircle, BarChart3, Truck, QrCode, Star, Bell, Users, Heart, Award, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 function FeatureSectionWithBentoGrid() {
@@ -22,8 +22,10 @@ function FeatureSectionWithBentoGrid() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             
             {/* Large card - Profil Producteur */}
-            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl h-full lg:col-span-2 p-6 aspect-square lg:aspect-auto flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <User className="w-8 h-8 stroke-1 text-primary" />
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl h-full lg:col-span-2 p-6 aspect-square lg:aspect-auto flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-blue-100 w-fit">
+                <User className="w-8 h-8 stroke-2 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Profil Producteur</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -33,8 +35,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Gestion Produits */}
-            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Package className="w-8 h-8 stroke-1 text-secondary-foreground" />
+            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-green-100 w-fit">
+                <Package className="w-8 h-8 stroke-2 text-green-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Gestion Produits</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -44,8 +48,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Stickers NFC */}
-            <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <QrCode className="w-8 h-8 stroke-1 text-accent-foreground" />
+            <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-purple-100 w-fit">
+                <QrCode className="w-8 h-8 stroke-2 text-purple-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Stickers NFC</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -55,8 +61,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Large card - Traçabilité */}
-            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl h-full lg:col-span-2 p-6 aspect-square lg:aspect-auto flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Map className="w-8 h-8 stroke-1 text-primary" />
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl h-full lg:col-span-2 p-6 aspect-square lg:aspect-auto flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-orange-100 w-fit">
+                <Map className="w-8 h-8 stroke-2 text-orange-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Traçabilité Complète</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -66,8 +74,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Certifications */}
-            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Shield className="w-8 h-8 stroke-1 text-secondary-foreground" />
+            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-emerald-100 w-fit">
+                <Shield className="w-8 h-8 stroke-2 text-emerald-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Certifications</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -77,8 +87,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Alertes */}
-            <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Bell className="w-8 h-8 stroke-1 text-accent-foreground" />
+            <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-red-100 w-fit">
+                <Bell className="w-8 h-8 stroke-2 text-red-600 group-hover:scale-110 transition-transform duration-300 group-hover:animate-pulse" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Alertes Expiration</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -88,8 +100,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Avis Consommateurs */}
-            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Star className="w-8 h-8 stroke-1 text-primary" />
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-yellow-100 w-fit">
+                <Star className="w-8 h-8 stroke-2 text-yellow-600 group-hover:scale-110 transition-transform duration-300 group-hover:fill-yellow-600" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Avis Consommateurs</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -99,8 +113,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Large card - Dashboard Distributeur */}
-            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl h-full lg:col-span-2 p-6 aspect-square lg:aspect-auto flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <BarChart3 className="w-8 h-8 stroke-1 text-secondary-foreground" />
+            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl h-full lg:col-span-2 p-6 aspect-square lg:aspect-auto flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-indigo-100 w-fit">
+                <BarChart3 className="w-8 h-8 stroke-2 text-indigo-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Dashboard Distributeur</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -110,8 +126,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Logistique */}
-            <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Truck className="w-8 h-8 stroke-1 text-accent-foreground" />
+            <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-cyan-100 w-fit">
+                <Truck className="w-8 h-8 stroke-2 text-cyan-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Outils Logistiques</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -121,8 +139,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Communauté */}
-            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Users className="w-8 h-8 stroke-1 text-primary" />
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-pink-100 w-fit">
+                <Users className="w-8 h-8 stroke-2 text-pink-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Communauté</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
@@ -132,8 +152,10 @@ function FeatureSectionWithBentoGrid() {
             </div>
 
             {/* Small card - Éco-responsabilité */}
-            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-lg transition-all duration-300">
-              <Leaf className="w-8 h-8 stroke-1 text-secondary-foreground" />
+            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 rounded-xl aspect-square p-6 flex justify-between flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-500 animate-fade-in group">
+              <div className="p-2 rounded-lg bg-lime-100 w-fit">
+                <Leaf className="w-8 h-8 stroke-2 text-lime-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-xl tracking-tight font-semibold">Éco-responsabilité</h3>
                 <p className="text-muted-foreground max-w-xs text-base">
