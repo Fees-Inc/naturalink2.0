@@ -54,7 +54,7 @@ export function PricingSection() {
       ],
       cta: "Acheter",
       variant: "hero",
-      action: () => navigate('/producer/purchase'),
+      action: () => navigate('/producer/'),
       popular: true
     },
     {
@@ -75,7 +75,7 @@ export function PricingSection() {
       ],
       cta: "Souscrire",
       variant: "nature",
-      action: () => navigate('/distributor/subscribe'),
+      action: () => navigate('/distributor'),
       popular: false
     }
   ];

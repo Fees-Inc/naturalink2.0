@@ -17,7 +17,8 @@ import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-
+import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
+import SubscrineEntreprise from "./pages/Subscribe-entreprise";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -40,6 +41,8 @@ const App = () => (
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/cockpit-producers" element={<DashboardOverview />} />
+            <Route path="/distributor/subscribe" element={<SubscrineEntreprise />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

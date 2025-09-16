@@ -3,13 +3,92 @@ import { Navbar } from "@/components/landing/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Package, BarChart3, Users, Settings } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { motion } from "framer-motion";
+import { Plus, Package, BarChart3, Users, Settings, 
+
+    User, 
+  History, 
+  Award, 
+  TrendingUp, 
+  AlertTriangle, 
+  MessageCircle, 
+
+  Calendar,
+  MapPin,
+  Phone,
+  Mail
+ } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
+
+interface Product {
+  id: string;
+  name: string;
+  status: "available" | "sold" | "expired";
+  quantity: number;
+  harvestDate: string;
+  expiryDate: string;
+  location: string;
+}
+
+interface Producer {
+  name: string;
+  location: string;
+  phone: string;
+  email: string;
+  joinDate: string;
+  certifications: string[];
+  totalProducts: number;
+  totalSales: number;
+}
+
+const mockProducer: Producer = {
+  name: "Ferme Bio Abidjan",
+  location: "Abidjan, Côte d'Ivoire",
+  phone: "+225 07 12 34 56 78",
+  email: "contact@fermebio-abidjan.ci",
+  joinDate: "2023-01-15",
+  certifications: ["Bio", "NaturaLink Certifié", "Commerce Équitable"],
+  totalProducts: 156,
+  totalSales: 89
+};
+
+const mockProducts: Product[] = [
+  {
+    id: "1",
+    name: "Bananes Biologiques",
+    status: "available",
+    quantity: 50,
+    harvestDate: "2024-01-15",
+    expiryDate: "2024-01-25",
+    location: "Champ A1"
+  },
+  {
+    id: "2",
+    name: "Ananas Victoria",
+    status: "sold",
+    quantity: 30,
+    harvestDate: "2024-01-10",
+    expiryDate: "2024-01-30",
+    location: "Champ B2"
+  },
+  {
+    id: "3",
+    name: "Mangues Kent",
+    status: "available",
+    quantity: 25,
+    harvestDate: "2024-01-20",
+    expiryDate: "2024-02-05",
+    location: "Champ C1"
+  }
+];
 export default function Producer() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Seulement si l’utilisateur est connecté ET n’a pas le bon rôle
@@ -17,6 +96,31 @@ export default function Producer() {
       navigate(`/${profile.role}`);
     }
   }, [user, profile, navigate]);
+   useEffect(() => {
+      // Simuler le chargement des données
+      setTimeout(() => {
+        setProducts(mockProducts);
+        setLoading(false);
+      }, 1000);
+    }, []);
+
+      const getStatusColor = (status: string) => {
+    switch (status) {
+      case "available": return "bg-green-100 text-green-800";
+      case "sold": return "bg-blue-100 text-blue-800";
+      case "expired": return "bg-red-100 text-red-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "available": return "Disponible";
+      case "sold": return "Vendu";
+      case "expired": return "Expiré";
+      default: return status;
+    }
+  };
 
   const stats = [
     { label: "Produits Actifs", value: "24", icon: Package },
@@ -46,25 +150,39 @@ export default function Producer() {
 
   return (
     <div className="min-h-screen bg-secondary/30">
-      <Navbar />
-      
-      <main className="pt-20 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-8">
+      {/* <Navbar /> */}
+            {/* Header */}
+      <div className="border-b bg-card/50">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6"
+          >
             <div>
               <h1 className="text-4xl font-bold text-foreground mb-2">
-                Dashboard Producteur
+                Espace Producteur
               </h1>
-              <p className="text-xl text-muted-foreground">
-                Bienvenue {profile?.first_name} - {profile?.company_name}
+              <p className="text-muted-foreground text-lg">
+                Gérez vos produits et communiquez avec votre communauté
               </p>
             </div>
-            <Button onClick={() => navigate('/producer/add-product')}>
-              <Plus className="w-4 h-4 mr-2" />
-              Nouveau Produit
-            </Button>
-          </div>
+            
+            <div className="flex gap-4">
+              <Button variant="outline" size="lg">
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Support
+              </Button>
+              {/* <Button size="lg">
+                <Package className="w-5 h-5 mr-2" />
+                Ajouter un produit
+              </Button> */}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+      <main className="pt-20 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -88,14 +206,6 @@ export default function Producer() {
 
           {/* Quick Actions */}
           <div className="grid md:grid-cols-4 gap-6 mb-8">
-            <Card className="cursor-pointer hover:shadow-medium transition-smooth" onClick={() => navigate('/producer/add-product')}>
-              <CardHeader className="text-center">
-                <div className="w-12 h-12 mx-auto mb-4 bg-green-500 rounded-xl flex items-center justify-center">
-                  <Plus className="w-6 h-6 text-white" />
-                </div>
-                <CardTitle className="text-lg">Ajouter Produit</CardTitle>
-              </CardHeader>
-            </Card>
 
             <Card className="cursor-pointer hover:shadow-medium transition-smooth" onClick={() => navigate('/producer/purchase')}>
               <CardHeader className="text-center">
@@ -126,35 +236,198 @@ export default function Producer() {
           </div>
 
           {/* Recent Products */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Produits Récents</CardTitle>
-              <CardDescription>
-                Gestion de vos produits et leur traçabilité
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentProducts.map((product) => (
-                  <div key={product.id} className="flex items-center justify-between p-4 bg-secondary rounded-lg">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-foreground">{product.name}</h4>
-                      <p className="text-sm text-muted-foreground">Lot: {product.lot}</p>
-                      <p className="text-sm text-muted-foreground">Quantité: {product.quantity} unités</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge variant="secondary">
-                        {product.status}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        NFC: {product.nfcCount}/{product.quantity}
-                      </span>
-                    </div>
+
+      <div className="max-w-7xl mx-auto  py-12">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Profile Section */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-1"
+          >
+            <Card className="p-6">
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <User className="w-8 h-8 text-primary" />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <div>
+                    <CardTitle className="text-xl">{mockProducer.name}</CardTitle>
+                    <CardDescription className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      {mockProducer.location}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="w-4 h-4 text-muted-foreground" />
+                    <span>{mockProducer.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="w-4 h-4 text-muted-foreground" />
+                    <span>{mockProducer.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Calendar className="w-4 h-4 text-muted-foreground" />
+                    <span>Membre depuis {new Date(mockProducer.joinDate).getFullYear()}</span>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Award className="w-4 h-4" />
+                    Certifications
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {mockProducer.certifications.map((cert, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {cert}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary">{mockProducer.totalProducts}</div>
+                    <div className="text-xs text-muted-foreground">Produits total</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600">{mockProducer.totalSales}</div>
+                    <div className="text-xs text-muted-foreground">Vendus</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card className="mt-6 p-6">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg">Actions Rapides</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button variant="outline" className="w-full justify-start">
+                  <Users className="w-4 h-4 mr-2" />
+                  Forum Producteurs
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Mes Statistiques
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <AlertTriangle className="w-4 h-4 mr-2" />
+                  Alertes (3)
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Main Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="lg:col-span-2 space-y-8"
+          >
+            {/* Stats Cards */}
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="p-6 text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Package className="w-6 h-6 text-green-600" />
+                </div>
+                <div className="text-3xl font-bold text-green-600 mb-1">
+                  {products.filter(p => p.status === "available").length}
+                </div>
+                <div className="text-sm text-muted-foreground">Produits Disponibles</div>
+              </Card>
+              
+              <Card className="p-6 text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-6 h-6 text-blue-600" />
+                </div>
+                <div className="text-3xl font-bold text-blue-600 mb-1">
+                  {products.filter(p => p.status === "sold").length}
+                </div>
+                <div className="text-sm text-muted-foreground">Produits Vendus</div>
+              </Card>
+              
+              <Card className="p-6 text-center">
+                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <AlertTriangle className="w-6 h-6 text-orange-600" />
+                </div>
+                <div className="text-3xl font-bold text-orange-600 mb-1">
+                  {products.filter(p => new Date(p.expiryDate) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).length}
+                </div>
+                <div className="text-sm text-muted-foreground">Bientôt Expirés</div>
+              </Card>
+            </div>
+
+            {/* Products List */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <History className="w-5 h-5" />
+                    Mes Produits Récents
+                  </CardTitle>
+                  <CardDescription>
+                    Suivi de vos derniers produits ajoutés
+                  </CardDescription>
+                </div>
+                <Button variant="outline">Voir tout</Button>
+              </CardHeader>
+              
+              <CardContent>
+                <div className="space-y-4">
+                  {products.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h4 className="font-semibold">{product.name}</h4>
+                          <Badge className={getStatusColor(product.status)}>
+                            {getStatusText(product.status)}
+                          </Badge>
+                        </div>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <div>Quantité: {product.quantity} kg • Lieu: {product.location}</div>
+                          <div>
+                            Récolte: {new Date(product.harvestDate).toLocaleDateString()} • 
+                            Expiration: {new Date(product.expiryDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          Modifier
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          Détails
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
         </div>
       </main>
     </div>
