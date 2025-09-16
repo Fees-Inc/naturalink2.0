@@ -1,6 +1,7 @@
 import SEO from "@/components/SEO";
 import { ProducerCard } from "@/components/ui/producer-card";
 import { Button } from "@/components/ui/button";
+import { Navigation } from "@/components/ui/navigation";
 import { Plus } from "lucide-react";
 
 export default function Producers() {
@@ -11,17 +12,33 @@ export default function Producers() {
   ];
 
   return (
-    <section className="space-y-6">
+    <div className="flex min-h-screen w-full bg-background">
       <SEO title="Producteurs & Coopératives | NaturaLink" description="Gérez les profils producteurs, localisations, certifications et historiques des coopératives NaturaLink." />
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Producteurs & Coopératives</h1>
-        <Button variant="hero" className="gap-2"><Plus className="w-4 h-4" /> Nouveau Producteur</Button>
-      </header>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {producers.map((p, i) => (
-          <ProducerCard key={i} {...p} />
-        ))}
-      </div>
-    </section>
+      
+      {/* Navigation Sidebar */}
+      <Navigation />
+      
+      {/* Main Content */}
+      <main className="flex-1 p-8 pb-12 overflow-auto">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <header className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Producteurs & Coopératives</h1>
+              <p className="text-muted-foreground">Gérez vos producteurs et coopératives partenaires</p>
+            </div>
+            <Button variant="hero" className="gap-2 shadow-soft">
+              <Plus className="w-4 h-4" /> 
+              Nouveau Producteur
+            </Button>
+          </header>
+          
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {producers.map((p, i) => (
+              <ProducerCard key={i} {...p} />
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
