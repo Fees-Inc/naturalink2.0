@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Users, Building, Factory } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Check, Users, Building, Factory, Tractor, Handshake } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function PricingSection() {
   const [selectedPlan, setSelectedPlan] = useState("producers");
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
   const navigate = useNavigate();
 
   const plans = [
@@ -54,7 +56,7 @@ export function PricingSection() {
       ],
       cta: "Acheter",
       variant: "hero",
-      action: () => navigate('/producer/'),
+      action: () => setShowRoleDialog(true),
       popular: true
     },
     {
@@ -171,6 +173,64 @@ export function PricingSection() {
           })}
         </div>
       </div>
+      
+      {/* Modal de choix de rôle */}
+      <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">Choisissez votre type</DialogTitle>
+            <DialogDescription className="text-center">
+              Êtes-vous un producteur indépendant ou faites-vous partie d'une coopérative ?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 gap-4 py-4">
+            <Card 
+              className="cursor-pointer transition-smooth hover:shadow-medium hover:ring-2 hover:ring-primary"
+              onClick={() => {
+                setShowRoleDialog(false);
+                navigate('/producer');
+              }}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                    <Tractor className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Producteur</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Exploitation agricole indépendante
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className="cursor-pointer transition-smooth hover:shadow-medium hover:ring-2 hover:ring-primary"
+              onClick={() => {
+                setShowRoleDialog(false);
+                navigate('/producer');
+              }}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                    <Handshake className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Coopérative</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Regroupement de producteurs
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
