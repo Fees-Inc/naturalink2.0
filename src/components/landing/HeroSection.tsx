@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Shield, Leaf } from "lucide-react";
 import { RoleSelectionDialog } from "@/components/RoleSelectionDialog";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-agriculture.jpg";
 
 export function HeroSection() {
@@ -17,24 +18,50 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
           <div className="text-center lg:text-left">
-            <Badge variant="secondary" className="mb-6 inline-flex items-center gap-2 text-sm px-4 py-2">
-              <Star className="w-4 h-4 text-accent" fill="currentColor" />
-              1er Label Intelligent Made in Côte d'Ivoire
-            </Badge>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Badge variant="secondary" className="mb-6 inline-flex items-center gap-2 text-sm px-4 py-2">
+                <Star className="w-4 h-4 text-accent" fill="currentColor" />
+                1er Label Intelligent Made in Côte d'Ivoire
+              </Badge>
+            </motion.div>
             
-            <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 leading-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               Nous Sommes
-              <span className="block accent-gradient bg-clip-text text-transparent">
+              <motion.span 
+                className="block accent-gradient bg-clip-text text-transparent"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
                 NaturaLink
-              </span>
+              </motion.span>
               Agriculture
-            </h1>
+            </motion.h1>
             
-            <p className="text-xl text-primary-foreground/90 mb-8 max-w-lg mx-auto lg:mx-0">
+            <motion.p 
+              className="text-xl text-primary-foreground/90 mb-8 max-w-lg mx-auto lg:mx-0"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
               La traçabilité complète de vos produits agri-alimentaires grâce aux puces NFC et la blockchain VeChain.
-            </p>
+            </motion.p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1 }}
+            >
               <Button 
                 variant="accent" 
                 size="lg" 
@@ -46,23 +73,43 @@ export function HeroSection() {
               <Button variant="outline" size="lg" className="text-lg border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 Voir la démonstration
               </Button>
-            </div>
+            </motion.div>
             
             {/* Trust indicators */}
-            <div className="flex items-center gap-4 justify-center lg:justify-start text-primary-foreground/80">
-              <div className="flex items-center gap-2">
+            <motion.div 
+              className="flex items-center gap-4 justify-center lg:justify-start text-primary-foreground/80"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+            >
+              <motion.div 
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 1.4 }}
+              >
                 <Shield className="w-5 h-5" />
                 <span className="text-sm">Blockchain sécurisée</span>
-              </div>
-              <div className="flex items-center gap-2">
+              </motion.div>
+              <motion.div 
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 1.6 }}
+              >
                 <MapPin className="w-5 h-5" />
                 <span className="text-sm">Made in CI</span>
-              </div>
-              <div className="flex items-center gap-2">
+              </motion.div>
+              <motion.div 
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 1.8 }}
+              >
                 <Leaf className="w-5 h-5" />
                 <span className="text-sm">100% traçable</span>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
           
           {/* Right content - Image */}
