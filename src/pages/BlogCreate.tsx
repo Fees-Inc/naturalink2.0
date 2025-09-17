@@ -23,7 +23,7 @@ const categories = [
 
 export default function BlogCreate() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -68,7 +68,7 @@ export default function BlogCreate() {
   };
 
   const saveDraft = async () => {
-    if (!user || !formData.title.trim()) {
+    if (!formData.title.trim()) {
       toast({
         title: "Erreur",
         description: "Le titre est requis pour sauvegarder",
@@ -91,7 +91,7 @@ export default function BlogCreate() {
           featured_image_url: formData.featured_image_url || null,
           tags: formData.tags,
           slug: slug,
-          author_id: user.id,
+          author_id: "123",
           status: 'brouillon'
         });
 
@@ -116,7 +116,7 @@ export default function BlogCreate() {
   };
 
   const publishArticle = async () => {
-    if (!user || !formData.title.trim() || !formData.content.trim() || !formData.category) {
+    if (!formData.title.trim() || !formData.content.trim() || !formData.category) {
       toast({
         title: "Erreur", 
         description: "Veuillez remplir tous les champs requis",
@@ -139,7 +139,7 @@ export default function BlogCreate() {
           featured_image_url: formData.featured_image_url || null,
           tags: formData.tags,
           slug: slug,
-          author_id: user.id,
+          author_id: "123",
           status: 'publie',
           published_at: new Date().toISOString()
         });
@@ -164,24 +164,24 @@ export default function BlogCreate() {
     }
   };
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-secondary/30">
-        <Navbar />
-        <main className="pt-20 pb-12">
-          <div className="max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-2xl font-bold mb-4">Accès restreint</h1>
-            <p className="text-muted-foreground mb-6">
-              Vous devez être connecté pour créer un article.
-            </p>
-            <Button onClick={() => navigate('/auth')}>
-              Se connecter
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  // if (!user) {
+  //   return (
+  //     <div className="min-h-screen bg-secondary/30">
+  //       <Navbar />
+  //       <main className="pt-20 pb-12">
+  //         <div className="max-w-4xl mx-auto px-4 text-center">
+  //           <h1 className="text-2xl font-bold mb-4">Accès restreint</h1>
+  //           <p className="text-muted-foreground mb-6">
+  //             Vous devez être connecté pour créer un article.
+  //           </p>
+  //           <Button onClick={() => navigate('/auth')}>
+  //             Se connecter
+  //           </Button>
+  //         </div>
+  //       </main>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-secondary/30">

@@ -595,7 +595,8 @@ if (user && profile && profile.role !== "distributor") {
       </div>
 
       {/* Rapports ESG */}
-      <Card className="shadow-card">
+      
+      <Card className="shadow-card my-4 p-4">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <PieChart className="h-5 w-5 text-accent" />

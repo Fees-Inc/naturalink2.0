@@ -101,13 +101,13 @@ const ProducerCard = ({ producer }: ProducerCardProps) => {
         <div className="flex gap-2">
           <Button 
             variant="default" 
-            className="flex-1 bg-gradient-organic border-0 text-primary-foreground hover:opacity-90 transition-opacity shadow-soft"
+            className="flex-1 border-0 text-primary-foreground hover:opacity-90 transition-opacity shadow-soft"
             onClick={() => navigate('/')}
           >
             Voir Profil
           </Button>
           <Button 
-            variant="outline" 
+            variant="secondary" 
             className="flex-1 border-primary/20 text-primary hover:bg-primary/5"
           >
             Contact
@@ -118,4 +118,4 @@ const ProducerCard = ({ producer }: ProducerCardProps) => {
   );
 };
 
-export default ProducerCard;
+export default ProducerCard

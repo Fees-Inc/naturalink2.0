@@ -342,6 +342,7 @@ const ProducersList = () => {
             >
               Réinitialiser les filtres
             </Button>
+            
           </div>
         )}
       </div>

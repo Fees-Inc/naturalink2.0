@@ -18,7 +18,7 @@ export default function SubscrineEntreprise() {
   return (
 
     <div className="min-h-screen bg-secondary/30">
-        <main className="p-8">
+        <main className="p-20">
              <div className="space-y-6 ">
       {/* Header */}
       <div className="flex items-center justify-between">
