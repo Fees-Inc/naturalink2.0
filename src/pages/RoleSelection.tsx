@@ -2,15 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, Factory, Building, User } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { Users, Factory, Building } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export default function RoleSelection() {
   const [selectedRole, setSelectedRole] = useState<'consumer' | 'producer' | 'distributor' | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { updateProfile } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const roles = [
     {
@@ -43,11 +43,14 @@ export default function RoleSelection() {
     if (!selectedRole) return;
     
     setIsLoading(true);
-    const { error } = await updateProfile({ role: selectedRole });
     
-    if (error) {
-      console.error('Error updating role:', error);
-    } else {
+    // Simulate role selection
+    setTimeout(() => {
+      toast({
+        title: "Profil configuré",
+        description: `Votre profil ${selectedRole} a été configuré. Mode démo activé.`
+      });
+      
       // Redirect based on role
       switch (selectedRole) {
         case 'consumer':
@@ -62,8 +65,8 @@ export default function RoleSelection() {
         default:
           navigate('/');
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
@@ -74,7 +77,7 @@ export default function RoleSelection() {
             Choisissez votre profil
           </h1>
           <p className="text-xl text-muted-foreground">
-            Sélectionnez le rôle qui correspond le mieux à votre activité
+            Sélectionnez le rôle qui correspond le mieux à votre activité (Mode démo)
           </p>
         </div>
 
@@ -125,7 +128,7 @@ export default function RoleSelection() {
             size="lg"
             className="px-12"
           >
-            {isLoading ? 'Configuration...' : 'Continuer'}
+            {isLoading ? 'Configuration...' : 'Continuer (Démo)'}
           </Button>
         </div>
       </div>

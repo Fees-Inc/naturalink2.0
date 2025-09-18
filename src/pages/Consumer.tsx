@@ -94,7 +94,6 @@ const mockProducers: Producer[] = [
   // Fin du nouveau code
 export default function Consumer() {
   const [scanInput, setScanInput] = useState("");
-  const { user, profile } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);

@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, PenTool, Calendar, User, Eye, Heart } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 
 interface Article {
@@ -17,10 +16,7 @@ interface Article {
   views_count: number;
   likes_count: number;
   published_at: string;
-  profiles: {
-    first_name?: string;
-    last_name?: string;
-  };
+  author_name: string;
 }
 
 export default function Blog() {
@@ -40,34 +36,35 @@ export default function Blog() {
   ];
 
   useEffect(() => {
-    fetchArticles();
-  }, []);
-
-  const fetchArticles = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('articles')
-        .select(`
-          *,
-          profiles!articles_author_id_fkey (
-            first_name,
-            last_name
-          )
-        `)
-        .eq('status', 'publie')
-        .order('published_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching articles:', error);
-      } else {
-        setArticles(data || []);
-      }
-    } catch (error) {
-      console.error('Error fetching articles:', error);
-    } finally {
+    // Simulate loading demo articles
+    setTimeout(() => {
+      setArticles([
+        {
+          id: "1",
+          title: "L'avenir de la traçabilité agricole en Côte d'Ivoire",
+          excerpt: "Découvrez comment la blockchain révolutionne la traçabilité des produits agricoles ivoiriens.",
+          category: "Blockchain",
+          featured_image_url: "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=400",
+          views_count: 1250,
+          likes_count: 89,
+          published_at: "2024-01-15",
+          author_name: "Marie Kouassi"
+        },
+        {
+          id: "2", 
+          title: "Les coopératives agricoles : un modèle d'avenir",
+          excerpt: "Comment les coopératives transforment l'agriculture ivoirienne vers plus de durabilité.",
+          category: "Coopératives",
+          featured_image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400",
+          views_count: 890,
+          likes_count: 67,
+          published_at: "2024-01-12",
+          author_name: "Kouamé Yao"
+        }
+      ]);
       setLoading(false);
-    }
-  };
+    }, 1000);
+  }, []);
 
   const filteredArticles = articles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -93,7 +90,7 @@ export default function Blog() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-4">
-              Blog NaturaLink
+              Blog NaturaLink (Mode démo)
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
               Découvrez les dernières innovations en traçabilité agricole
@@ -189,7 +186,7 @@ export default function Blog() {
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4" />
-                        {article.profiles?.first_name} {article.profiles?.last_name}
+                        {article.author_name}
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />

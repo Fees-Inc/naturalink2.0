@@ -7,10 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Upload, X, Save, Eye, Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
 const categories = [
@@ -23,7 +20,6 @@ const categories = [
 
 export default function BlogCreate() {
   const navigate = useNavigate();
-  // const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -57,16 +53,6 @@ export default function BlogCreate() {
     }));
   };
 
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove accents
-      .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .trim();
-  };
-
   const saveDraft = async () => {
     if (!formData.title.trim()) {
       toast({
@@ -78,41 +64,15 @@ export default function BlogCreate() {
     }
 
     setLoading(true);
-    try {
-      const slug = generateSlug(formData.title);
-      
-      const { error } = await supabase
-        .from('articles')
-        .insert({
-          title: formData.title,
-          excerpt: formData.excerpt || null,
-          content: formData.content,
-          category: formData.category as any,
-          featured_image_url: formData.featured_image_url || null,
-          tags: formData.tags,
-          slug: slug,
-          author_id: "123",
-          status: 'brouillon'
-        });
-
-      if (error) throw error;
-
+    // Simulate save
+    setTimeout(() => {
       toast({
         title: "Brouillon sauvegardé",
-        description: "Votre article a été sauvegardé en brouillon"
+        description: "Votre article a été sauvegardé en brouillon (Mode démo)"
       });
-      
-      navigate('/blog');
-    } catch (error) {
-      console.error('Error saving draft:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder le brouillon",
-        variant: "destructive"
-      });
-    } finally {
       setLoading(false);
-    }
+      navigate('/blog');
+    }, 1000);
   };
 
   const publishArticle = async () => {
@@ -126,62 +86,16 @@ export default function BlogCreate() {
     }
 
     setLoading(true);
-    try {
-      const slug = generateSlug(formData.title);
-      
-      const { error } = await supabase
-        .from('articles')
-        .insert({
-          title: formData.title,
-          excerpt: formData.excerpt || null,
-          content: formData.content,
-          category: formData.category as any,
-          featured_image_url: formData.featured_image_url || null,
-          tags: formData.tags,
-          slug: slug,
-          author_id: "123",
-          status: 'publie',
-          published_at: new Date().toISOString()
-        });
-
-      if (error) throw error;
-
+    // Simulate publish
+    setTimeout(() => {
       toast({
         title: "Article publié",
-        description: "Votre article a été publié avec succès"
+        description: "Votre article a été publié avec succès (Mode démo)"
       });
-      
-      navigate('/blog');
-    } catch (error) {
-      console.error('Error publishing article:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de publier l'article",
-        variant: "destructive"
-      });
-    } finally {
       setLoading(false);
-    }
+      navigate('/blog');
+    }, 1000);
   };
-
-  // if (!user) {
-  //   return (
-  //     <div className="min-h-screen bg-secondary/30">
-  //       <Navbar />
-  //       <main className="pt-20 pb-12">
-  //         <div className="max-w-4xl mx-auto px-4 text-center">
-  //           <h1 className="text-2xl font-bold mb-4">Accès restreint</h1>
-  //           <p className="text-muted-foreground mb-6">
-  //             Vous devez être connecté pour créer un article.
-  //           </p>
-  //           <Button onClick={() => navigate('/auth')}>
-  //             Se connecter
-  //           </Button>
-  //         </div>
-  //       </main>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="min-h-screen bg-secondary/30">
@@ -193,7 +107,7 @@ export default function BlogCreate() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold text-foreground">
-                Créer un article
+                Créer un article (Mode démo)
               </h1>
               <p className="text-muted-foreground mt-2">
                 Partagez vos connaissances avec la communauté NaturaLink

@@ -6,9 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Leaf, AlertCircle } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,35 +23,23 @@ export default function Auth() {
     password: ''
   });
 
-  const { signUp, signIn, user } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Redirect if already logged in
-    if (user) {
-      navigate('/');
-    }
-  }, [user, navigate]);
+  const { toast } = useToast();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    const { error } = await signUp(
-      signUpData.email,
-      signUpData.password,
-      signUpData.firstName,
-      signUpData.lastName
-    );
-
-    if (error) {
-      setError(error.message);
-    } else {
-      // Successfully signed up
+    // Simulate signup
+    setTimeout(() => {
+      toast({
+        title: "Compte créé",
+        description: "Votre compte a été créé avec succès. Fonctionnalité de démo."
+      });
       navigate('/role-selection');
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    }, 1000);
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -60,15 +47,15 @@ export default function Auth() {
     setIsLoading(true);
     setError(null);
 
-    const { error } = await signIn(signInData.email, signInData.password);
-
-    if (error) {
-      setError(error.message);
-    } else {
-      // Successfully signed in
+    // Simulate signin
+    setTimeout(() => {
+      toast({
+        title: "Connexion réussie",
+        description: "Bienvenue sur NaturaLink. Fonctionnalité de démo."
+      });
       navigate('/');
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
@@ -105,7 +92,7 @@ export default function Auth() {
               <CardHeader>
                 <CardTitle>Se connecter</CardTitle>
                 <CardDescription>
-                  Accédez à votre compte NaturaLink
+                  Accédez à votre compte NaturaLink (Mode démo)
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -132,7 +119,7 @@ export default function Auth() {
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? 'Connexion...' : 'Se connecter'}
+                    {isLoading ? 'Connexion...' : 'Se connecter (Démo)'}
                   </Button>
                 </form>
               </CardContent>
@@ -144,7 +131,7 @@ export default function Auth() {
               <CardHeader>
                 <CardTitle>Créer un compte</CardTitle>
                 <CardDescription>
-                  Rejoignez NaturaLink et commencez votre parcours vers la traçabilité
+                  Rejoignez NaturaLink et commencez votre parcours vers la traçabilité (Mode démo)
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -192,7 +179,7 @@ export default function Auth() {
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? 'Création...' : 'Créer mon compte'}
+                    {isLoading ? 'Création...' : 'Créer mon compte (Démo)'}
                   </Button>
                 </form>
               </CardContent>

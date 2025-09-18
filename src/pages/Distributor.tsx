@@ -25,7 +25,6 @@ import { BarChart3, TrendingUp, Users, MapPin, Building, Globe,
   Factory,
   ArrowRight,
  } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const expiringProducts = [
@@ -114,7 +113,6 @@ const redirectionCircuits = [
 export default function Distributor() {
 
   const [activeTab, setActiveTab] = useState('dashboard');
-  const { user, profile } = useAuth();
   const navigate = useNavigate();
 useEffect(() => {
 // Rediriger seulement si un utilisateur est connecté avec un autre rôle
