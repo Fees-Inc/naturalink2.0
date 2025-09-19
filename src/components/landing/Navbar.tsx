@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Leaf, Menu } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Leaf, Menu, User, LogOut, Settings } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -35,14 +39,44 @@ export function Navbar() {
             </a>
           </div>
           
-          {/* Auth Section */}
+          {/* Auth/Profile Section */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
-              Connexion
-            </Button>
-            <Button variant="hero" size="sm" onClick={() => navigate('/auth')}>
-              S'inscrire
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="cursor-pointer">
+                    <AvatarImage src={profile?.avatar_url} />
+                    <AvatarFallback>
+                      {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => navigate(`/${profile?.role}`)}>
+                    <User className="mr-2 h-4 w-4" />
+                    Mon espace
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Paramètres
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Déconnexion
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
+                  Connexion
+                </Button>
+                <Button variant="hero" size="sm" onClick={() => navigate('/auth')}>
+                  S'inscrire
+                </Button>
+              </>
+            )}
           </div>
           
           {/* Mobile menu button */}
@@ -70,12 +104,25 @@ export function Navbar() {
               <a href="#contact" className="text-foreground hover:text-primary transition-smooth">
                 Contact
               </a>
-              <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/auth')}>
-                Connexion
-              </Button>
-              <Button variant="hero" size="sm" className="w-full" onClick={() => navigate('/auth')}>
-                S'inscrire
-              </Button>
+              {user ? (
+                <>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => navigate(`/${profile?.role}`)}>
+                    Mon espace
+                  </Button>
+                  <Button variant="ghost" size="sm" className="w-full" onClick={signOut}>
+                    Déconnexion
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/auth')}>
+                    Connexion
+                  </Button>
+                  <Button variant="hero" size="sm" className="w-full" onClick={() => navigate('/auth')}>
+                    S'inscrire
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}

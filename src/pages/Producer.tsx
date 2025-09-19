@@ -19,6 +19,7 @@ import { Plus, Package, BarChart3, Users, Settings,
   Phone,
   Mail
  } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 
@@ -84,6 +85,7 @@ const mockProducts: Product[] = [
   }
 ];
 export default function Producer() {
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
    const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
