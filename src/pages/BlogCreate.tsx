@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Upload, X, Save, Eye, Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -81,21 +81,21 @@ export default function BlogCreate() {
     try {
       const slug = generateSlug(formData.title);
       
-      const { error } = await supabase
-        .from('articles')
-        .insert({
-          title: formData.title,
-          excerpt: formData.excerpt || null,
-          content: formData.content,
-          category: formData.category as any,
-          featured_image_url: formData.featured_image_url || null,
-          tags: formData.tags,
-          slug: slug,
-          author_id: "123",
-          status: 'brouillon'
-        });
+      // const { error } = await supabase
+      //   .from('articles')
+      //   .insert({
+      //     title: formData.title,
+      //     excerpt: formData.excerpt || null,
+      //     content: formData.content,
+      //     category: formData.category as any,
+      //     featured_image_url: formData.featured_image_url || null,
+      //     tags: formData.tags,
+      //     slug: slug,
+      //     author_id: "123",
+      //     status: 'brouillon'
+      //   });
 
-      if (error) throw error;
+      // if (error) throw error;
 
       toast({
         title: "Brouillon sauvegardé",
@@ -129,22 +129,22 @@ export default function BlogCreate() {
     try {
       const slug = generateSlug(formData.title);
       
-      const { error } = await supabase
-        .from('articles')
-        .insert({
-          title: formData.title,
-          excerpt: formData.excerpt || null,
-          content: formData.content,
-          category: formData.category as any,
-          featured_image_url: formData.featured_image_url || null,
-          tags: formData.tags,
-          slug: slug,
-          author_id: "123",
-          status: 'publie',
-          published_at: new Date().toISOString()
-        });
+      // const { error } = await supabase
+      //   .from('articles')
+      //   .insert({
+      //     title: formData.title,
+      //     excerpt: formData.excerpt || null,
+      //     content: formData.content,
+      //     category: formData.category as any,
+      //     featured_image_url: formData.featured_image_url || null,
+      //     tags: formData.tags,
+      //     slug: slug,
+      //     author_id: "123",
+      //     status: 'publie',
+      //     published_at: new Date().toISOString()
+      //   });
 
-      if (error) throw error;
+      // if (error) throw error;
 
       toast({
         title: "Article publié",
