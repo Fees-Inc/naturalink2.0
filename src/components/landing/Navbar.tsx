@@ -69,11 +69,11 @@ export function Navbar() {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
+                {/* <Button variant="ghost" size="sm" disabled={true}>
                   Connexion
-                </Button>
-                <Button variant="hero" size="sm" onClick={() => navigate('/auth')}>
-                  S'inscrire
+                </Button> */}
+                <Button variant="hero" size="sm" disabled={true}>
+                  Vous êtes connecté à la version test
                 </Button>
               </>
             )}

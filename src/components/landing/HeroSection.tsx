@@ -34,7 +34,7 @@ export function HeroSection() {
               La traçabilité complète de vos produits agri-alimentaires grâce aux puces NFC et la blockchain VeChain.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
               <Button 
                 variant="accent" 
                 size="lg" 
@@ -46,7 +46,7 @@ export function HeroSection() {
               <Button variant="outline" size="lg" className="text-lg border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 Voir la démonstration
               </Button>
-            </div>
+            </div> */}
             
             {/* Trust indicators */}
             <div className="flex items-center gap-4 justify-center lg:justify-start text-primary-foreground/80">

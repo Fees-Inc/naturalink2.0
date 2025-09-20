@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, PenTool, Calendar, User, Eye, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-
+import { mockArticles } from "@/mock/articles"; // <-- importe les mocks
 interface Article {
   id: string;
   title: string;
@@ -40,8 +40,17 @@ export default function Blog() {
   ];
 
   useEffect(() => {
-    fetchArticles();
+    // ⚡ Ici tu décides si tu veux mocker ou utiliser Supabase
+    const useMock = true;
+
+    if (useMock) {
+      setArticles(mockArticles);
+      setLoading(false);
+    } else {
+      fetchArticles();
+    }
   }, []);
+
 
   const fetchArticles = async () => {
     try {
@@ -99,10 +108,10 @@ export default function Blog() {
               Découvrez les dernières innovations en traçabilité agricole
             </p>
             
-            <Button onClick={() => navigate('/blog/create')}>
+            {/* <Button onClick={() => navigate('/blog/create')}>
               <PenTool className="w-4 h-4 mr-2" />
               Écrire un article
-            </Button>
+            </Button> */}
           </div>
 
           {/* Search and Filters */}

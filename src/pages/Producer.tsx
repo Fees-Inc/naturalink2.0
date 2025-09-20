@@ -428,7 +428,16 @@ export default function Producer() {
           </motion.div>
         </div>
       </div>
+      <div className="flex">
+              <div className="flex gap-2">
+                          <Button variant="outline" size="sm" onClick={() => navigate('/')}>
+                            Retour
+                          </Button>
+                        </div>
+               </div>
         </div>
+
+        
       </main>
     </div>
   );

@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Heart, Share2, MessageCircle, Calendar, User, ThumbsUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { mockArticles, mockComments } from "@/mock/articles";
 
 interface Article {
   id: string;
@@ -38,6 +39,7 @@ interface Comment {
 }
 
 export default function BlogDetails() {
+  const useMock = true;
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -48,14 +50,25 @@ export default function BlogDetails() {
   const [isLiked, setIsLiked] = useState(false);
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
 
-  useEffect(() => {
-    if (id) {
-      fetchArticle();
-      fetchComments();
-      fetchRelatedArticles();
-      incrementViews();
-    }
-  }, [id]);
+ 
+useEffect(() => {
+  if (!id) return;
+
+  if (useMock) {
+    // Charger depuis le mock
+    const found = mockArticles.find((a) => a.id === id);
+    setArticle(found || null);
+    setComments(mockComments);
+    setRelatedArticles(mockArticles.filter((a) => a.id !== id).slice(0, 3));
+    setLoading(false);
+  } else {
+    // Mode Supabase
+    fetchArticle();
+    fetchComments();
+    fetchRelatedArticles();
+    incrementViews();
+  }
+}, [id]);
 
   const fetchArticle = async () => {
     try {
@@ -141,46 +154,61 @@ export default function BlogDetails() {
   };
 
   const handleLike = async () => {
-    if (!user || !id) return;
-    
-    try {
-      const { data: liked } = await supabase.rpc('toggle_article_like', {
-        article_id: id,
-        user_id: user.id
-      });
-      
-      setIsLiked(liked);
+    if (!id) return;
+  
+    if (useMock) {
+      setIsLiked(!isLiked);
       if (article) {
         setArticle({
           ...article,
-          likes_count: liked ? article.likes_count + 1 : article.likes_count - 1
+          likes_count: isLiked ? article.likes_count - 1 : article.likes_count + 1,
         });
       }
-    } catch (error) {
-      console.error('Error toggling like:', error);
-    }
-  };
-
-  const handleAddComment = async () => {
-    if (!user || !newComment.trim()) return;
-
-    try {
-      const { error } = await supabase
-        .from('comments')
-        .insert({
+    } else {
+      // Supabase
+      try {
+        const { data: liked } = await supabase.rpc("toggle_article_like", {
           article_id: id,
-          author_id: user.id,
-          content: newComment.trim()
+          user_id: user?.id,
         });
-
-      if (error) throw error;
-      
-      setNewComment("");
-      fetchComments(); // Refresh comments
-    } catch (error) {
-      console.error('Error adding comment:', error);
+        setIsLiked(liked);
+      } catch (error) {
+        console.error("Error toggling like:", error);
+      }
     }
   };
+  
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+  
+    if (useMock) {
+      const newMock = {
+        id: Date.now().toString(),
+        content: newComment,
+        created_at: new Date().toISOString(),
+        profiles: {
+          first_name: user?.email || "Mock",
+          last_name: user?.email || "User",
+        },
+      };
+      setComments([newMock, ...comments]);
+      setNewComment("");
+    } else {
+      try {
+        const { error } = await supabase.from("comments").insert({
+          article_id: id,
+          author_id: user?.id,
+          content: newComment.trim(),
+        });
+        if (error) throw error;
+        setNewComment("");
+        fetchComments();
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+    }
+  };
+  
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
