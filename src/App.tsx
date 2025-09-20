@@ -19,6 +19,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
 import SubscrineEntreprise from "./pages/Subscribe-entreprise";
+import AdminApp from "./admin/App";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/cockpit-producers" element={<DashboardOverview />} />
             <Route path="/distributor/subscribe" element={<SubscrineEntreprise />} />
+            <Route path="/admin/naturalink/*" element={<AdminApp />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
