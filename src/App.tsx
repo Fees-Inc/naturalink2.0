@@ -45,7 +45,6 @@ const App = () => (
             <Route path="/cockpit-producers" element={<DashboardOverview />} />
             <Route path="/distributor/subscribe" element={<SubscrineEntreprise />} />
             <Route path="/admin/naturalink/*" element={<AdminApp />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
