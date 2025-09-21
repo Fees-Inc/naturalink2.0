@@ -32,7 +32,7 @@ const AdminApp = () => (
         <Toaster />
         <Sonner />
           <Routes>
-            <Route path="login" element={<Login />} />
+          <Route index element={<Login />} />
             <Route path="dashboard" element={
               <ProtectedRoute>
                 <AppLayout><Dashboard /></AppLayout>
