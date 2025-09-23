@@ -127,6 +127,11 @@ const Login = () => {
               Se connecter
             </Button>
 
+            {/* Demo credentials */}
+            <p className="text-sm text-muted-foreground text-center">
+              Identifiants de démonstration: <span className="font-medium">admin@gmail.com</span> / <span className="font-medium">admin</span>
+            </p>
+
             {/* Google Login */}
             
           </form>
