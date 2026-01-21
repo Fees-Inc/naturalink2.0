@@ -96,7 +96,7 @@ export default function Admin() {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    setUsers(data || []);
+    setUsers((data || []) as User[]);
   };
 
   const fetchProducts = async () => {
@@ -106,7 +106,7 @@ export default function Admin() {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    setProducts(data || []);
+    setProducts((data || []) as Product[]);
   };
 
   const fetchAnalytics = async () => {

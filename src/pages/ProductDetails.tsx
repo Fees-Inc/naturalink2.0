@@ -75,7 +75,7 @@ export default function ProductDetails() {
         .single();
 
       if (error) throw error;
-      setProduct(data);
+      setProduct(data as Product);
     } catch (error) {
       console.error('Error fetching product:', error);
       navigate('/products');
@@ -92,7 +92,7 @@ export default function ProductDetails() {
         .eq('product_id', id)
         .order('event_date', { ascending: true });
 
-      if (data) setTimeline(data);
+      if (data) setTimeline(data as Timeline[]);
     } catch (error) {
       console.error('Error fetching timeline:', error);
     }

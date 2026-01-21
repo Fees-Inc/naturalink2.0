@@ -20,6 +20,8 @@ import NotFound from "./pages/NotFound";
 import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
 import SubscrineEntreprise from "./pages/Subscribe-entreprise";
 import AdminApp from "./admin/App";
+import StrategicFinancialEngineering from "./pages/StrategicFinancialEngineering";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -45,6 +47,7 @@ const App = () => (
             <Route path="/cockpit-producers" element={<DashboardOverview />} />
             <Route path="/distributor/subscribe" element={<SubscrineEntreprise />} />
             <Route path="/admin/naturalink/*" element={<AdminApp />} />
+            <Route path="/strategic-financial-engineering" element={<StrategicFinancialEngineering />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -61,7 +61,7 @@ export default function Products() {
       if (error) {
         console.error('Error fetching products:', error);
       } else {
-        setProducts(data || []);
+        setProducts((data || []) as Product[]);
       }
     } catch (error) {
       console.error('Error fetching products:', error);
