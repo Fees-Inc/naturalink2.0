@@ -7,11 +7,19 @@ const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+// Safe localStorage wrapper for SSR compatibility
+const getStorage = () => {
+  if (typeof window !== 'undefined') {
+    return window.localStorage;
+  }
+  return undefined;
+};
+
 // Using untyped client since database tables are not yet defined
 // Once you set up your database schema, regenerate types with Supabase CLI
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
+    storage: getStorage(),
     persistSession: true,
     autoRefreshToken: true,
   }
