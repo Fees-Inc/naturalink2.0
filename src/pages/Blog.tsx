@@ -69,7 +69,7 @@ export default function Blog() {
       if (error) {
         console.error('Error fetching articles:', error);
       } else {
-        setArticles(data || []);
+        setArticles((data || []) as Article[]);
       }
     } catch (error) {
       console.error('Error fetching articles:', error);

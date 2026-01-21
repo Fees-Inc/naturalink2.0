@@ -86,7 +86,7 @@ useEffect(() => {
         .single();
 
       if (error) throw error;
-      setArticle(data);
+      setArticle(data as Article);
     } catch (error) {
       console.error('Error fetching article:', error);
       navigate('/blog');
@@ -110,7 +110,7 @@ useEffect(() => {
         .eq('is_approved', true)
         .order('created_at', { ascending: false });
 
-      if (data) setComments(data);
+      if (data) setComments(data as Comment[]);
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
@@ -139,7 +139,7 @@ useEffect(() => {
         .limit(3)
         .order('published_at', { ascending: false });
 
-      if (data) setRelatedArticles(data);
+      if (data) setRelatedArticles(data as Article[]);
     } catch (error) {
       console.error('Error fetching related articles:', error);
     }
