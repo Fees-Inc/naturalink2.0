@@ -28,7 +28,26 @@ interface AuthContextType {
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const missingProviderError = new Error('AuthProvider is missing. Wrap your app with <AuthProvider>.');
+
+// Fallback context prevents hard-crashes if a component is rendered outside <AuthProvider>
+// (still warns once so the misconfiguration is visible during development).
+const fallbackAuthContext: AuthContextType = {
+  user: null,
+  session: null,
+  profile: null,
+  loading: false,
+  signUp: async () => ({ error: missingProviderError }),
+  signIn: async () => ({ error: missingProviderError }),
+  signOut: async () => {
+    // no-op
+  },
+  updateProfile: async () => ({ error: missingProviderError }),
+};
+
+let didWarnMissingProvider = false;
+
+const AuthContext = createContext<AuthContextType>(fallbackAuthContext);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -158,8 +177,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+
+  if (context === fallbackAuthContext && !didWarnMissingProvider) {
+    didWarnMissingProvider = true;
+    console.warn('useAuth was called outside <AuthProvider>. Falling back to guest auth state.');
   }
+
   return context;
 }
