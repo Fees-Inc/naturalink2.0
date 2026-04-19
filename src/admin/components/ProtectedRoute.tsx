@@ -1,18 +1,26 @@
 import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProtectedRouteProps {
   children: ReactNode;
+  requiredRole?: 'admin' | 'producer' | 'distributor' | 'consumer';
 }
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated } = useAuth();
+export const ProtectedRoute = ({ children, requiredRole = 'admin' }: ProtectedRouteProps) => {
+  const { isAuthenticated, profile, loading } = useAuth();
   const location = useLocation();
 
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen">Chargement...</div>;
+  }
+
   if (!isAuthenticated) {
-    // Redirige vers le login admin
-    return <Navigate to="/admin/naturalink/login" state={{ from: location }} replace />;
+    return <Navigate to="/auth" state={{ from: location }} replace />;
+  }
+
+  if (requiredRole && profile?.role !== requiredRole) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

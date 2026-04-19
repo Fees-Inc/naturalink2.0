@@ -1,5 +1,6 @@
-import { Leaf, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export function Footer() {
   const footerLinks = {
@@ -38,17 +39,19 @@ export function Footer() {
           {/* Brand section */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 nature-gradient rounded-xl flex items-center justify-center">
-                <Leaf className="w-7 h-7 text-primary-foreground" />
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <Link to="/">
+                  <img src="/Logo-Naturalink.png" alt="Logo" className="w-50 h-40" />
+                </Link>
               </div>
-              <span className="text-2xl font-bold">NaturaLink</span>
             </div>
-            
+
             <p className="text-primary-foreground/80 mb-6 max-w-md">
-              La première solution de traçabilité intelligente Made in Côte d'Ivoire 
+              La première solution de traçabilité intelligente Made in Côte d'Ivoire
               pour l'agriculture durable et transparente.
             </p>
-            
+
             {/* Contact info */}
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm text-primary-foreground/80">
@@ -57,7 +60,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-primary-foreground/80">
                 <Phone className="w-4 h-4" />
-                <span>+225 01 23 45 67 89</span>
+                <span>+225 01 03 57 59 66</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-primary-foreground/80">
                 <MapPin className="w-4 h-4" />
@@ -65,15 +68,15 @@ export function Footer() {
               </div>
             </div>
           </div>
-          
+
           {/* Links sections */}
           <div>
             <h3 className="font-semibold mb-4">Produit</h3>
             <ul className="space-y-3">
               {footerLinks.product.map((link, index) => (
                 <li key={index}>
-                  <a 
-                    href={link.href} 
+                  <a
+                    href={link.href}
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-smooth text-sm"
                   >
                     {link.label}
@@ -82,14 +85,14 @@ export function Footer() {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-semibold mb-4">Entreprise</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link, index) => (
                 <li key={index}>
-                  <a 
-                    href={link.href} 
+                  <a
+                    href={link.href}
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-smooth text-sm"
                   >
                     {link.label}
@@ -98,14 +101,14 @@ export function Footer() {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-semibold mb-4">Support</h3>
             <ul className="space-y-3">
               {footerLinks.support.map((link, index) => (
                 <li key={index}>
-                  <a 
-                    href={link.href} 
+                  <a
+                    href={link.href}
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-smooth text-sm"
                   >
                     {link.label}
@@ -115,13 +118,13 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        
+
         {/* Bottom section */}
         <div className="py-8 border-t border-primary-foreground/20 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-sm text-primary-foreground/60">
-            © 2024 NaturaLink. Tous droits réservés. Made in Côte d'Ivoire 🇨🇮
+            © {new Date().getFullYear()} NaturaLink. Tous droits réservés. Made in Côte d'Ivoire
           </div>
-          
+
           <div className="flex items-center gap-4">
             {socialLinks.map((social, index) => {
               const IconComponent = social.icon;

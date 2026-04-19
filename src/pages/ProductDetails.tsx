@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/landing/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Calendar, Award, Share2, ShoppingCart, Star, Phone, Mail, ExternalLink, Truck, Leaf, Factory } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { productService } from "@/services/productService";
 
 interface Product {
   id: string;
@@ -37,9 +38,6 @@ interface Timeline {
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [timeline, setTimeline] = useState<Timeline[]>([]);
-  const [loading, setLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
   const [reviews] = useState([
     {
@@ -58,45 +56,34 @@ export default function ProductDetails() {
     }
   ]);
 
-  useEffect(() => {
-    if (id) {
-      fetchProductDetails();
-      fetchTimeline();
+  const {
+    data: product,
+    isLoading: isProductLoading,
+    isError: productError,
+  } = useQuery(
+    ["product", id],
+    () => productService.getProductById(id ?? ''),
+    {
+      enabled: !!id,
+      onError: () => {
+        navigate('/products');
+      },
     }
-  }, [id]);
+  );
 
-  const fetchProductDetails = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', id)
-        .eq('status', 'active')
-        .single();
-
-      if (error) throw error;
-      setProduct(data as Product);
-    } catch (error) {
-      console.error('Error fetching product:', error);
-      navigate('/products');
-    } finally {
-      setLoading(false);
+  const {
+    data: traceability,
+    isLoading: isTraceabilityLoading,
+  } = useQuery(
+    ["productTraceability", id],
+    () => productService.getProductTraceability(id ?? ''),
+    {
+      enabled: !!id,
     }
-  };
+  );
 
-  const fetchTimeline = async () => {
-    try {
-      const { data } = await supabase
-        .from('product_timeline')
-        .select('*')
-        .eq('product_id', id)
-        .order('event_date', { ascending: true });
-
-      if (data) setTimeline(data as Timeline[]);
-    } catch (error) {
-      console.error('Error fetching timeline:', error);
-    }
-  };
+  const loading = isProductLoading || isTraceabilityLoading;
+  const timeline = traceability?.activity_logs ?? [];
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
@@ -128,7 +115,7 @@ export default function ProductDetails() {
     );
   }
 
-  if (!product) {
+  if (!product || productError) {
     return (
       <div className="min-h-screen bg-secondary/30">
         <Navbar />

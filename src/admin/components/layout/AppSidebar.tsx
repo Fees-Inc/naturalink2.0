@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useAuth } from "@/admin/context/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 const basePath = "/admin/naturalink";
@@ -39,13 +39,13 @@ const navigation = [
 export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { signOut, user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
     toast.success('Déconnexion réussie');
-    navigate('/login');
+    navigate('/admin/naturalink/login');
   };
 
   return (

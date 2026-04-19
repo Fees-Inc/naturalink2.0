@@ -7,28 +7,34 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { Leaf, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const {
-    login
-  } = useAuth();
+  const { signIn, profile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state?.from?.pathname || "/admin/naturalink/dashboard";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(email, password)) {
-      toast.success('Connexion réussie !');
-      navigate(redirectPath, { replace: true });
-    } else {
-      toast.error('Identifiants incorrects. Utilisez "admin" / "admin"');
+    const { error } = await signIn(email, password);
+
+    if (error) {
+      toast.error('Identifiants incorrects ou problème de connexion.');
+      return;
     }
+
+    if (profile?.role !== 'admin') {
+      toast.error('Accès réservé aux administrateurs.');
+      return;
+    }
+
+    toast.success('Connexion réussie !');
+    navigate(redirectPath, { replace: true });
   };
   return <div className="min-h-screen flex">
       {/* Left Side - Nature Hero Section */}

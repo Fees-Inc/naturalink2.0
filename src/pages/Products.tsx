@@ -1,31 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/landing/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Calendar, Award, QrCode } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { productService } from "@/services/productService";
+import { ProductDTO } from "@/services/api.types";
 
-interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  origin_location?: string;
-  sustainability_info?: string;
-  photo_url?: string;
-  harvest_date?: string;
-  producer_video_url?: string;
-  certifications: any;
-}
+interface Product extends ProductDTO {}
 
 export default function Products() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const {
+    data: productsData,
+    isLoading,
+    isError,
+  } = useQuery(["products", selectedCategory], () =>
+    productService.getProducts({ page: 1, limit: 50, status: 'active' })
+  );
+
+  const products = productsData?.data ?? [];
 
   const categories = [
     "Fruits",
@@ -35,40 +35,6 @@ export default function Products() {
     "Épices",
     "Huiles"
   ];
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          id,
-          name,
-          description,
-          origin_location,
-          sustainability_info,
-          photo_url,
-          harvest_date,
-          producer_video_url,
-          certifications
-        `)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching products:', error);
-      } else {
-        setProducts((data || []) as Product[]);
-      }
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -137,9 +103,13 @@ export default function Products() {
           </div>
 
           {/* Products Grid */}
-          {loading ? (
+          {isLoading ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">Chargement des produits...</p>
+            </div>
+          ) : isError ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Impossible de charger les produits.</p>
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-12">

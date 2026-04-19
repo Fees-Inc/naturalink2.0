@@ -17,10 +17,9 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 nature-gradient rounded-lg flex items-center justify-center">
-              <Leaf className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">NaturaLink</span>
+            <Link to="/">
+              <img src="/Logo-Naturalink.png" alt="Logo" className="w-50 h-16" />
+            </Link>
           </div>
           
           {/* Desktop Navigation */}

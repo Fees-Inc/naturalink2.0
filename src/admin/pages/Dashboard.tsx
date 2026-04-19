@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { RealtimeMetrics } from "@/components/dashboard/RealtimeMetrics";
 import { ActivityChart } from "@/components/dashboard/ActivityChart";
@@ -15,17 +16,23 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { dashboardService } from "@/services/dashboardService";
 
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  const { data: dashboardStats, isLoading } = useQuery(
+    ["dashboardStats"],
+    () => dashboardService.getStats()
+  );
+
   const stats = [
     {
       title: "Producteurs actifs",
-      value: "250",
-      subtitle: "+12% ce mois",
+      value: dashboardStats?.total_producers?.toString() || "0",
+      subtitle: `${dashboardStats?.verified_producers || 0} vérifiés`,
       icon: <Wheat className="h-5 w-5" />,
-      trend: { value: 12, isPositive: true },
+      trend: { value: dashboardStats?.month_over_month_growth || 0, isPositive: true },
       onClick: () => navigate("producers"),
       color: "primary" as const,
     },
@@ -40,8 +47,8 @@ export default function Dashboard() {
     },
     {
       title: "Produits certifiés",
-      value: "480",
-      subtitle: "35 en attente",
+      value: dashboardStats?.total_products?.toString() || "0",
+      subtitle: `${dashboardStats?.active_transactions || 0} transactions`,
       icon: <Package className="h-5 w-5" />,
       trend: { value: 15, isPositive: true },
       onClick: () => navigate("products"),
@@ -49,7 +56,7 @@ export default function Dashboard() {
     },
     {
       title: "Distributeurs",
-      value: "10",
+      value: dashboardStats?.total_distributors?.toString() || "0",
       subtitle: "2 nouveaux ce mois",
       icon: <Building2 className="h-5 w-5" />,
       trend: { value: 20, isPositive: true },
@@ -149,26 +156,26 @@ export default function Dashboard() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-2xl font-bold">320,000 FCFA</p>
-                    <p className="text-sm text-muted-foreground">Revenus ce mois</p>
+                    <p className="text-2xl font-bold">{dashboardStats?.total_revenue?.toLocaleString() || "0"} FCFA</p>
+                    <p className="text-sm text-muted-foreground">Revenus totaux</p>
                   </div>
                   <Badge className="badge-success">
                     <TrendingUp className="h-3 w-3 mr-1" />
-                    +24%
+                    +{dashboardStats?.month_over_month_growth || 0}%
                   </Badge>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Stickers NFC vendus</span>
-                    <span className="font-medium">1,280 unités</span>
+                    <span className="text-muted-foreground">Transactions actives</span>
+                    <span className="font-medium">{dashboardStats?.active_transactions || 0}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Abonnements actifs</span>
-                    <span className="font-medium">32</span>
+                    <span className="text-muted-foreground">Producteurs vérifiés</span>
+                    <span className="font-medium">{dashboardStats?.verified_producers || 0}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Factures en attente</span>
-                    <span className="font-medium text-[hsl(var(--accent))]">5</span>
+                    <span className="text-muted-foreground">Produits actifs</span>
+                    <span className="font-medium text-[hsl(var(--accent))]">{dashboardStats?.total_products || 0}</span>
                   </div>
                 </div>
               </div>

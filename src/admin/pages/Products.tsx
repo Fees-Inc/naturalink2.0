@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Package, 
   Plus, 
@@ -15,103 +16,41 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-
-interface Product {
-  id: string;
-  name: string;
-  producer: string;
-  status: "registered" | "verification" | "validation" | "nfc" | "ready";
-  certification: string;
-  date: string;
-  batch: string;
-}
-
-const products: Product[] = [
-  {
-    id: "1",
-    name: "Tomates Bio Premium",
-    producer: "Ferme du Soleil",
-    status: "ready",
-    certification: "Bio EU",
-    date: "2024-03-15",
-    batch: "LOT-2024-001",
-  },
-  {
-    id: "2",
-    name: "Miel de Montagne",
-    producer: "Rucher Valley",
-    status: "nfc",
-    certification: "Bio Local",
-    date: "2024-03-14",
-    batch: "LOT-2024-002",
-  },
-  {
-    id: "3",
-    name: "Huile d'Olive Extra Vierge",
-    producer: "Oliviers du Sud",
-    status: "validation",
-    certification: "AOC",
-    date: "2024-03-13",
-    batch: "LOT-2024-003",
-  },
-  {
-    id: "4",
-    name: "Pommes Golden",
-    producer: "Vergers Bio",
-    status: "verification",
-    certification: "Bio EU",
-    date: "2024-03-12",
-    batch: "LOT-2024-004",
-  },
-  {
-    id: "5",
-    name: "Fromage Artisanal",
-    producer: "Fromagerie Locale",
-    status: "registered",
-    certification: "AOP",
-    date: "2024-03-11",
-    batch: "LOT-2024-005",
-  },
-];
+import { productService } from "@/services/productService";
 
 const workflowSteps = [
   { 
-    id: "registered", 
-    label: "Enregistré", 
-    icon: Package,
-    color: "text-muted-foreground"
+    id: "active", 
+    label: "Actif", 
+    icon: CheckCircle,
+    color: "text-[hsl(var(--nature-primary))]"
   },
   { 
-    id: "verification", 
-    label: "Vérification", 
+    id: "inactive", 
+    label: "Inactif", 
     icon: Clock,
     color: "text-[hsl(var(--accent))]"
   },
   { 
-    id: "validation", 
-    label: "Validation", 
+    id: "archived", 
+    label: "Archivé", 
     icon: AlertCircle,
-    color: "text-[hsl(var(--sky-blue))]"
-  },
-  { 
-    id: "nfc", 
-    label: "Sticker NFC", 
-    icon: Nfc,
-    color: "text-[hsl(var(--nature-secondary))]"
-  },
-  { 
-    id: "ready", 
-    label: "Mise en rayon", 
-    icon: CheckCircle,
-    color: "text-[hsl(var(--nature-primary))]"
+    color: "text-muted-foreground"
   },
 ];
 
 export default function Products() {
-  const [selectedStep, setSelectedStep] = useState<string | null>(null);
+  const [selectedStep, setSelectedStep] = useState<string>("active");
+
+  const { data: productsData } = useQuery(
+    ["products"],
+    () => productService.getProducts({ page: 1, limit: 100 })
+  );
+
+  const allProducts = productsData?.data ?? [];
 
   const getProductsByStatus = (status: string) => {
-    return products.filter(p => p.status === status);
+    return allProducts.filter(p => p.status === status);
   };
 
   const getStepProgress = (status: string) => {
@@ -129,7 +68,7 @@ export default function Products() {
               Gestion des Produits
             </h1>
             <p className="text-muted-foreground mt-1">
-              480 produits certifiés • 35 en attente
+              {productsData?.total || "0"} produits • {getProductsByStatus("active").length} actifs
             </p>
           </div>
           <div className="flex gap-3">
@@ -149,8 +88,8 @@ export default function Products() {
           <Card className="stat-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold">480</p>
-                <p className="text-sm text-muted-foreground">Certifiés</p>
+                <p className="text-2xl font-bold">{getProductsByStatus("active").length}</p>
+                <p className="text-sm text-muted-foreground">Actifs</p>
               </div>
               <CheckCircle className="h-8 w-8 text-[hsl(var(--nature-primary))]" />
             </div>
@@ -158,8 +97,8 @@ export default function Products() {
           <Card className="stat-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold">35</p>
-                <p className="text-sm text-muted-foreground">En attente</p>
+                <p className="text-2xl font-bold">{getProductsByStatus("inactive").length}</p>
+                <p className="text-sm text-muted-foreground">Inactifs</p>
               </div>
               <Clock className="h-8 w-8 text-[hsl(var(--accent))]" />
             </div>
@@ -167,19 +106,19 @@ export default function Products() {
           <Card className="stat-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold">1,280</p>
-                <p className="text-sm text-muted-foreground">Stickers NFC</p>
+                <p className="text-2xl font-bold">{getProductsByStatus("archived").length}</p>
+                <p className="text-sm text-muted-foreground">Archivés</p>
               </div>
-              <Nfc className="h-8 w-8 text-[hsl(var(--nature-secondary))]" />
+              <AlertCircle className="h-8 w-8 text-muted-foreground" />
             </div>
           </Card>
           <Card className="stat-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold">98%</p>
-                <p className="text-sm text-muted-foreground">Taux validation</p>
+                <p className="text-2xl font-bold">{allProducts.length}</p>
+                <p className="text-sm text-muted-foreground">Total</p>
               </div>
-              <BarChart3 className="h-8 w-8 text-[hsl(var(--sky-blue))]" />
+              <Package className="h-8 w-8 text-[hsl(var(--sky-blue))]" />
             </div>
           </Card>
         </div>
