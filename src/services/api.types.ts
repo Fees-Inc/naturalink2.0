@@ -69,11 +69,11 @@ export interface CooperativeDTO {
 
 export interface CreateProducerDTO {
   name: string;
-  email: string;
-  phone: string;
   location: string;
-  bio?: string;
-  cooperative_id?: string;
+  certification_status?: 'pending' | 'certified' | 'rejected';
+  description?: string;
+  email?: string;
+  phone?: string;
 }
 
 export interface UpdateProducerDTO {
@@ -108,12 +108,15 @@ export interface ProductDTO {
 
 export interface CreateProductDTO {
   name: string;
-  description: string;
-  origin_location: string;
-  price: number;
-  quantity: number;
-  unit: string;
-  harvest_date: string;
+  producer_id: string;
+  status?: 'registered' | 'verification' | 'validation';
+  description?: string;
+  nfc_tag_id?: string;
+  origin_location?: string;
+  price?: number;
+  quantity?: number;
+  unit?: string;
+  harvest_date?: string;
   expiry_date?: string;
   certifications?: string[];
   sustainability_info?: string;
@@ -145,10 +148,11 @@ export interface DistributorDTO {
 }
 
 export interface CreateDistributorDTO {
-  company_name: string;
-  email: string;
-  phone: string;
+  name: string;
   location: string;
+  description?: string;
+  email?: string;
+  phone?: string;
   contact_person?: string;
 }
 

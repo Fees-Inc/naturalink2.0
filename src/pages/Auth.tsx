@@ -47,7 +47,7 @@ export default function Auth() {
     );
 
     if (error) {
-      setError(error.message);
+      setError(typeof error === 'string' ? error : error?.message ?? 'Erreur durant l\'inscription');
     } else {
       // Successfully signed up
       navigate('/role-selection');
@@ -63,7 +63,7 @@ export default function Auth() {
     const { error } = await signIn(signInData.email, signInData.password);
 
     if (error) {
-      setError(error.message);
+      setError(typeof error === 'string' ? error : error?.message ?? 'Erreur durant la connexion');
     } else {
       // Successfully signed in
       navigate('/');

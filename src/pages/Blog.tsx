@@ -5,9 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, PenTool, Calendar, User, Eye, Heart } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { mockArticles } from "@/mock/articles"; // <-- importe les mocks
+import { mockArticles } from "@/mock/articles";
+
 interface Article {
   id: string;
   title: string;
@@ -32,7 +32,7 @@ export default function Blog() {
 
   const categories = [
     "Agriculture Durable",
-    "Blockchain", 
+    "Blockchain",
     "Traçabilité",
     "Innovation",
     "Coopératives",
@@ -40,43 +40,10 @@ export default function Blog() {
   ];
 
   useEffect(() => {
-    // ⚡ Ici tu décides si tu veux mocker ou utiliser Supabase
-    const useMock = true;
-
-    if (useMock) {
-      setArticles(mockArticles);
-      setLoading(false);
-    } else {
-      fetchArticles();
-    }
+    // Utilise les données mockées
+    setArticles(mockArticles);
+    setLoading(false);
   }, []);
-
-
-  const fetchArticles = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('articles')
-        .select(`
-          *,
-          profiles!articles_author_id_fkey (
-            first_name,
-            last_name
-          )
-        `)
-        .eq('status', 'publie')
-        .order('published_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching articles:', error);
-      } else {
-        setArticles((data || []) as Article[]);
-      }
-    } catch (error) {
-      console.error('Error fetching articles:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const filteredArticles = articles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

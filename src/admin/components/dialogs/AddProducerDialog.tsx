@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -22,15 +23,18 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronLeft, ChevronRight, User, MapPin, FileText } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { producerService } from "@/services/producerService";
+import { CreateProducerDTO } from "@/services/api.types";
 
 interface AddProducerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddProducer: (producer: any) => void;
+  onAddProducer?: (producer: any) => void;
 }
 
 export function AddProducerDialog({ open, onOpenChange, onAddProducer }: AddProducerDialogProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -82,7 +86,39 @@ export function AddProducerDialog({ open, onOpenChange, onAddProducer }: AddProd
     }
   };
 
-  const handleSubmit = () => {
+  // Mutation for creating producer
+  const createMutation = useMutation({
+    mutationFn: async (data: CreateProducerDTO) => {
+      return producerService.createProducer(data);
+    },
+    onSuccess: (newProducer) => {
+      // Invalidate and refetch producers list
+      queryClient.invalidateQueries({ queryKey: ['producers'] });
+      
+      toast({
+        title: "Succès",
+        description: `${newProducer.name} a été ajouté avec succès.`,
+      });
+
+      // Reset form and close
+      resetForm();
+      onOpenChange(false);
+
+      // Call callback if provided
+      if (onAddProducer) {
+        onAddProducer(newProducer);
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erreur",
+        description: error?.response?.data?.message || "Une erreur s'est produite lors de l'ajout du producteur",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.city) {
       toast({
         title: "Erreur",
@@ -92,25 +128,17 @@ export function AddProducerDialog({ open, onOpenChange, onAddProducer }: AddProd
       return;
     }
 
-    const newProducer = {
-      id: Date.now(),
+    const producerData: CreateProducerDTO = {
       name: formData.name,
-      avatar: "/placeholder.svg",
-      members: formData.type === "cooperative" ? parseInt(formData.members) || 1 : 1,
       location: `${formData.city}, ${formData.region}`,
-      certified: formData.certified,
-      products: 0,
-      lastActive: "À l'instant",
-      revenue: "0 FCFA",
-      status: "active",
-      email: formData.email,
-      phone: formData.phone,
+      certification_status: formData.certified ? 'certified' : 'pending',
       description: formData.description,
     };
 
-    onAddProducer(newProducer);
-    
-    // Reset form
+    await createMutation.mutateAsync(producerData);
+  };
+
+  const resetForm = () => {
     setFormData({
       name: "",
       type: "individual",
@@ -127,14 +155,7 @@ export function AddProducerDialog({ open, onOpenChange, onAddProducer }: AddProd
       farmSize: "",
       experience: "",
     });
-    
     setCurrentStep(1);
-    onOpenChange(false);
-    
-    toast({
-      title: "Producteur ajouté",
-      description: `${formData.name} a été ajouté avec succès.`,
-    });
   };
 
   const handleClose = () => {
@@ -420,9 +441,10 @@ export function AddProducerDialog({ open, onOpenChange, onAddProducer }: AddProd
               <Button 
                 type="button" 
                 onClick={handleSubmit}
-                className="bg-[hsl(var(--nature-primary))] hover:bg-[hsl(var(--nature-primary))]/90 text-white"
+                disabled={createMutation.isPending}
+                className="bg-[hsl(var(--nature-primary))] hover:bg-[hsl(var(--nature-primary))]/90 text-white disabled:opacity-50"
               >
-                Enregistrer le producteur
+                {createMutation.isPending ? "Enregistrement..." : "Enregistrer le producteur"}
               </Button>
             )}
           </div>

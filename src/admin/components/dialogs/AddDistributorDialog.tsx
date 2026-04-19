@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -19,15 +20,18 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { distributorService } from "@/services/distributorService";
+import { CreateDistributorDTO } from "@/services/api.types";
 
 interface AddDistributorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddDistributor: (distributor: any) => void;
+  onAddDistributor?: (distributor: any) => void;
 }
 
 export function AddDistributorDialog({ open, onOpenChange, onAddDistributor }: AddDistributorDialogProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     name: "",
     type: "supermarket",
@@ -39,7 +43,39 @@ export function AddDistributorDialog({ open, onOpenChange, onAddDistributor }: A
     description: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Mutation for creating distributor
+  const createMutation = useMutation({
+    mutationFn: async (data: CreateDistributorDTO) => {
+      return distributorService.createDistributor(data);
+    },
+    onSuccess: (newDistributor) => {
+      // Invalidate and refetch distributors list
+      queryClient.invalidateQueries({ queryKey: ['distributors'] });
+      
+      toast({
+        title: "Succès",
+        description: `${newDistributor.name} a été ajouté avec succès.`,
+      });
+
+      // Reset form and close
+      resetForm();
+      onOpenChange(false);
+
+      // Call callback if provided
+      if (onAddDistributor) {
+        onAddDistributor(newDistributor);
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erreur",
+        description: error?.response?.data?.message || "Une erreur s'est produite lors de l'ajout du distributeur",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.name || !formData.location || !formData.email) {
@@ -51,30 +87,16 @@ export function AddDistributorDialog({ open, onOpenChange, onAddDistributor }: A
       return;
     }
 
-    const newDistributor = {
-      id: Date.now(),
+    const distributorData: CreateDistributorDTO = {
       name: formData.name,
-      type: formData.type === "supermarket" ? "Supermarché" : 
-            formData.type === "hypermarket" ? "Hypermarché" :
-            formData.type === "local" ? "Marché local" : "E-commerce",
-      avatar: "/placeholder.svg",
       location: formData.location,
-      volumeMonth: "0 kg",
-      revenue: "0 FCFA",
-      products: 0,
-      performance: 0,
-      status: "pending",
-      lastOrder: "Pas encore de commande",
-      email: formData.email,
-      phone: formData.phone,
-      contact: formData.contact,
-      zones: formData.zones,
       description: formData.description,
     };
 
-    onAddDistributor(newDistributor);
-    
-    // Reset form
+    await createMutation.mutateAsync(distributorData);
+  };
+
+  const resetForm = () => {
     setFormData({
       name: "",
       type: "supermarket",
@@ -84,13 +106,6 @@ export function AddDistributorDialog({ open, onOpenChange, onAddDistributor }: A
       contact: "",
       zones: "",
       description: "",
-    });
-    
-    onOpenChange(false);
-    
-    toast({
-      title: "Distributeur ajouté",
-      description: `${formData.name} a été ajouté avec succès.`,
     });
   };
 
@@ -201,8 +216,8 @@ export function AddDistributorDialog({ open, onOpenChange, onAddDistributor }: A
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Annuler
             </Button>
-            <Button type="submit" className="bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/90 text-accent-foreground">
-              Enregistrer
+            <Button type="submit" disabled={createMutation.isPending} className="bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/90 text-accent-foreground disabled:opacity-50">
+              {createMutation.isPending ? "Enregistrement..." : "Enregistrer"}
             </Button>
           </DialogFooter>
         </form>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -19,30 +20,66 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { productService } from "@/services/productService";
+import { CreateProductDTO } from "@/services/api.types";
 
 interface AddProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddProduct: (product: any) => void;
+  onAddProduct?: (product: any) => void;
   producers?: any[];
 }
 
 export function AddProductDialog({ open, onOpenChange, onAddProduct, producers = [] }: AddProductDialogProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     name: "",
-    producer: "",
+    producer_id: "",
     certification: "Bio EU",
     status: "registered",
     description: "",
     quantity: "",
     price: "",
+    nfc_tag_id: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Mutation for creating product
+  const createMutation = useMutation({
+    mutationFn: async (data: CreateProductDTO) => {
+      return productService.createProduct(data);
+    },
+    onSuccess: (newProduct) => {
+      // Invalidate and refetch products list
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      
+      toast({
+        title: "Succès",
+        description: `${newProduct.name} a été ajouté avec succès.`,
+      });
+
+      // Reset form and close
+      resetForm();
+      onOpenChange(false);
+
+      // Call callback if provided
+      if (onAddProduct) {
+        onAddProduct(newProduct);
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erreur",
+        description: error?.response?.data?.message || "Une erreur s'est produite lors de l'ajout du produit",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.producer) {
+    if (!formData.name || !formData.producer_id) {
       toast({
         title: "Erreur",
         description: "Veuillez remplir tous les champs obligatoires",
@@ -51,37 +88,27 @@ export function AddProductDialog({ open, onOpenChange, onAddProduct, producers =
       return;
     }
 
-    const newProduct = {
-      id: Date.now().toString(),
+    const productData: CreateProductDTO = {
       name: formData.name,
-      producer: formData.producer,
-      certification: formData.certification,
-      status: formData.status,
-      date: new Date().toISOString().split('T')[0],
-      batch: `LOT-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+      producer_id: formData.producer_id,
+      status: formData.status as any,
       description: formData.description,
-      quantity: formData.quantity,
-      price: formData.price,
+      nfc_tag_id: formData.nfc_tag_id || undefined,
     };
 
-    onAddProduct(newProduct);
-    
-    // Reset form
+    await createMutation.mutateAsync(productData);
+  };
+
+  const resetForm = () => {
     setFormData({
       name: "",
-      producer: "",
+      producer_id: "",
       certification: "Bio EU",
       status: "registered",
       description: "",
       quantity: "",
       price: "",
-    });
-    
-    onOpenChange(false);
-    
-    toast({
-      title: "Produit ajouté",
-      description: `${formData.name} a été ajouté avec succès.`,
+      nfc_tag_id: "",
     });
   };
 
@@ -107,13 +134,22 @@ export function AddProductDialog({ open, onOpenChange, onAddProduct, producers =
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="producer">Producteur *</Label>
-                <Input
-                  id="producer"
-                  value={formData.producer}
-                  onChange={(e) => setFormData({ ...formData, producer: e.target.value })}
-                  placeholder="Nom du producteur ou coopérative"
-                />
+                <Label htmlFor="producer_id">Producteur *</Label>
+                <Select
+                  value={formData.producer_id}
+                  onValueChange={(value) => setFormData({ ...formData, producer_id: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner un producteur" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {producers.map((producer) => (
+                      <SelectItem key={producer.id} value={producer.id}>
+                        {producer.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             
@@ -166,12 +202,12 @@ export function AddProductDialog({ open, onOpenChange, onAddProduct, producers =
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="price">Prix unitaire</Label>
+                <Label htmlFor="nfc_tag_id">ID NFC Tag (optionnel)</Label>
                 <Input
-                  id="price"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  placeholder="Ex: 1500 FCFA/kg"
+                  id="nfc_tag_id"
+                  value={formData.nfc_tag_id}
+                  onChange={(e) => setFormData({ ...formData, nfc_tag_id: e.target.value })}
+                  placeholder="Ex: NFC12345678"
                 />
               </div>
             </div>
@@ -191,8 +227,8 @@ export function AddProductDialog({ open, onOpenChange, onAddProduct, producers =
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Annuler
             </Button>
-            <Button type="submit" className="nature-gradient text-white">
-              Enregistrer
+            <Button type="submit" disabled={createMutation.isPending} className="nature-gradient text-white disabled:opacity-50">
+              {createMutation.isPending ? "Enregistrement..." : "Enregistrer"}
             </Button>
           </DialogFooter>
         </form>

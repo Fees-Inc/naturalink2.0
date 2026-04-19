@@ -20,7 +20,6 @@ import {
   Clock,
   TrendingUp
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 interface User {
@@ -51,6 +50,67 @@ interface Analytics {
   verifiedProducts: number;
 }
 
+// Mock data for admin dashboard
+const mockUsers: User[] = [
+  {
+    id: "1",
+    email: "producer1@example.com",
+    first_name: "Jean",
+    last_name: "Dupont",
+    role: "producer",
+    kyc_status: "verified",
+    is_verified: true,
+    created_at: "2024-01-15T10:00:00Z"
+  },
+  {
+    id: "2",
+    email: "consumer1@example.com",
+    first_name: "Marie",
+    last_name: "Martin",
+    role: "consumer",
+    kyc_status: "pending",
+    is_verified: false,
+    created_at: "2024-01-20T14:30:00Z"
+  },
+  {
+    id: "3",
+    email: "distributor1@example.com",
+    first_name: "Pierre",
+    last_name: "Dubois",
+    role: "distributor",
+    kyc_status: "verified",
+    is_verified: true,
+    created_at: "2024-01-10T09:15:00Z"
+  }
+];
+
+const mockProducts: Product[] = [
+  {
+    id: "1",
+    name: "Tomates Bio",
+    status: "active",
+    origin_location: "Bordeaux, France",
+    created_at: "2024-01-18T11:00:00Z",
+    user_id: "1"
+  },
+  {
+    id: "2",
+    name: "Huile d'Olive Extra Vierge",
+    status: "pending",
+    origin_location: "Provence, France",
+    created_at: "2024-01-22T16:45:00Z",
+    user_id: "1"
+  },
+  {
+    id: "3",
+    name: "Vin Rouge AOP",
+    status: "active",
+    origin_location: "Bordeaux, France",
+    created_at: "2024-01-12T13:20:00Z",
+    user_id: "3"
+  }
+];
+
 export default function Admin() {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
@@ -77,99 +137,22 @@ export default function Admin() {
 
   const fetchDashboardData = async () => {
     try {
-      await Promise.all([
-        fetchUsers(),
-        fetchProducts(),
-        fetchAnalytics()
-      ]);
+      setUsers(mockUsers);
+      setProducts(mockProducts);
+
+      // Calculate analytics from mock data
+      setAnalytics({
+        totalUsers: mockUsers.length,
+        totalProducts: mockProducts.length,
+        totalScans: 12847,
+        activeUsers: mockUsers.filter(u => u.is_verified).length,
+        verifiedProducts: mockProducts.filter(p => p.status === 'active').length
+      });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchUsers = async () => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    setUsers((data || []) as User[]);
-  };
-
-  const fetchProducts = async () => {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    setProducts((data || []) as Product[]);
-  };
-
-  const fetchAnalytics = async () => {
-    // Simulate analytics data
-    setAnalytics({
-      totalUsers: users.length,
-      totalProducts: products.length,
-      totalScans: 12847,
-      activeUsers: Math.floor(users.length * 0.7),
-      verifiedProducts: products.filter(p => p.status === 'active').length
-    });
-  };
-
-  const updateUserStatus = async (userId: string, status: string) => {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ kyc_status: status })
-        .eq('user_id', userId);
-
-      if (error) throw error;
-      fetchUsers(); // Refresh users list
-    } catch (error) {
-      console.error('Error updating user status:', error);
-    }
-  };
-
-  const updateProductStatus = async (productId: string, status: string) => {
-    try {
-      const { error } = await supabase
-        .from('products')
-        .update({ status })
-        .eq('id', productId);
-
-      if (error) throw error;
-      fetchProducts(); // Refresh products list
-    } catch (error) {
-      console.error('Error updating product status:', error);
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    const statusColors = {
-      'approved': 'bg-green-100 text-green-800',
-      'pending': 'bg-yellow-100 text-yellow-800',
-      'rejected': 'bg-red-100 text-red-800',
-      'active': 'bg-green-100 text-green-800',
-      'inactive': 'bg-gray-100 text-gray-800'
-    };
-
-    return (
-      <Badge className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
-        {status}
-      </Badge>
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
   };
 
   if (!profile || profile.role !== 'admin') {

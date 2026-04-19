@@ -81,22 +81,6 @@ export default function BlogCreate() {
     try {
       const slug = generateSlug(formData.title);
       
-      // const { error } = await supabase
-      //   .from('articles')
-      //   .insert({
-      //     title: formData.title,
-      //     excerpt: formData.excerpt || null,
-      //     content: formData.content,
-      //     category: formData.category as any,
-      //     featured_image_url: formData.featured_image_url || null,
-      //     tags: formData.tags,
-      //     slug: slug,
-      //     author_id: "123",
-      //     status: 'brouillon'
-      //   });
-
-      // if (error) throw error;
-
       toast({
         title: "Brouillon sauvegardé",
         description: "Votre article a été sauvegardé en brouillon"
@@ -129,23 +113,6 @@ export default function BlogCreate() {
     try {
       const slug = generateSlug(formData.title);
       
-      // const { error } = await supabase
-      //   .from('articles')
-      //   .insert({
-      //     title: formData.title,
-      //     excerpt: formData.excerpt || null,
-      //     content: formData.content,
-      //     category: formData.category as any,
-      //     featured_image_url: formData.featured_image_url || null,
-      //     tags: formData.tags,
-      //     slug: slug,
-      //     author_id: "123",
-      //     status: 'publie',
-      //     published_at: new Date().toISOString()
-      //   });
-
-      // if (error) throw error;
-
       toast({
         title: "Article publié",
         description: "Votre article a été publié avec succès"
@@ -163,25 +130,6 @@ export default function BlogCreate() {
       setLoading(false);
     }
   };
-
-  // if (!user) {
-  //   return (
-  //     <div className="min-h-screen bg-secondary/30">
-  //       <Navbar />
-  //       <main className="pt-20 pb-12">
-  //         <div className="max-w-4xl mx-auto px-4 text-center">
-  //           <h1 className="text-2xl font-bold mb-4">Accès restreint</h1>
-  //           <p className="text-muted-foreground mb-6">
-  //             Vous devez être connecté pour créer un article.
-  //           </p>
-  //           <Button onClick={() => navigate('/auth')}>
-  //             Se connecter
-  //           </Button>
-  //         </div>
-  //       </main>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="min-h-screen bg-secondary/30">

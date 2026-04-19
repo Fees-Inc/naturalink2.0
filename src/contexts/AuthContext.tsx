@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { apiClient, setAuthToken } from '@/services/apiClient';
 
 export type UserRole = 'consumer' | 'producer' | 'distributor' | 'admin';
 
@@ -21,9 +20,13 @@ export interface Profile {
   updated_at?: string;
 }
 
+export interface AuthUser {
+  id: string;
+  email: string;
+}
+
 export interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: AuthUser | null;
   profile: Profile | null;
   loading: boolean;
   isAuthenticated: boolean;
@@ -44,7 +47,6 @@ const missingProviderError = new Error('AuthProvider is missing. Wrap your app w
 
 const fallbackAuthContext: AuthContextType = {
   user: null,
-  session: null,
   profile: null,
   loading: false,
   isAuthenticated: false,
@@ -62,138 +64,85 @@ let didWarnMissingProvider = false;
 const AuthContext = createContext<AuthContextType>(fallbackAuthContext);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-
-        if (session?.user) {
-          setTimeout(() => {
-            fetchUserProfile(session.user.id);
-          }, 0);
-        } else {
-          setProfile(null);
-        }
+    const initializeAuth = async () => {
+      try {
+        const authData = await apiClient.get<{ user: AuthUser; profile: Profile }>('/auth/me');
+        setUser(authData.user);
+        setProfile(authData.profile);
+      } catch (error) {
+        setAuthToken(null);
+        setUser(null);
+        setProfile(null);
+      } finally {
         setLoading(false);
       }
-    );
+    };
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserProfile(session.user.id);
-      }
-      setLoading(false);
-    }).catch((error) => {
-      console.error('Error getting session:', error);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    initializeAuth();
   }, []);
-
-  const fetchUserProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
-
-      if (error) {
-        console.error('Error fetching profile:', error);
-      } else {
-        setProfile(data as Profile);
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
 
   const signUp = async (
     email: string,
     password: string,
     firstName?: string,
     lastName?: string,
-    role: UserRole = 'consumer'
+    role: UserRole = 'consumer',
   ) => {
-    const redirectUrl = `${window.location.origin}/`;
+    try {
+      const data = await apiClient.post<{ access_token: string; user: AuthUser; profile: Profile }>('/auth/signup', {
+        email,
+        password,
+        firstName,
+        lastName,
+        role,
+      });
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-          role,
-        }
-      }
-    });
-
-    // Create profile in profiles table
-    if (data.user && !error) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            user_id: data.user.id,
-            email,
-            first_name: firstName,
-            last_name: lastName,
-            role,
-            is_verified: false,
-            kyc_status: 'pending'
-          }
-        ]);
-
-      if (profileError) {
-        console.error('Error creating profile:', profileError);
-      }
+      setAuthToken(data.access_token);
+      setUser(data.user);
+      setProfile(data.profile);
+      return { error: null };
+    } catch (error: any) {
+      return { error: error?.response?.data?.message || error?.message || 'Unable to sign up' };
     }
-
-    return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const data = await apiClient.post<{ access_token: string; user: AuthUser; profile: Profile }>('/auth/login', {
+        email,
+        password,
+      });
 
-    return { error };
+      setAuthToken(data.access_token);
+      setUser(data.user);
+      setProfile(data.profile);
+      return { error: null };
+    } catch (error: any) {
+      return { error: error?.response?.data?.message || error?.message || 'Unable to sign in' };
+    }
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    setAuthToken(null);
     setUser(null);
-    setSession(null);
     setProfile(null);
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) return { error: 'No user logged in' };
 
-    const { error } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('user_id', user.id);
-
-    if (!error) {
-      setProfile(prev => prev ? { ...prev, ...updates } : null);
+    try {
+      const updated = await apiClient.patch<Profile>('/auth/profile', updates);
+      setProfile(updated);
+      return { error: null };
+    } catch (error: any) {
+      return { error: error?.response?.data?.message || error?.message || 'Unable to update profile' };
     }
-
-    return { error };
   };
 
   const hasRole = (role: UserRole): boolean => {
@@ -202,10 +151,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value: AuthContextType = {
     user,
-    session,
     profile,
     loading,
-    isAuthenticated: !!session,
+    isAuthenticated: !!user,
     hasRole,
     signUp,
     signIn,
@@ -213,11 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     updateProfile,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
