@@ -10,7 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { productService } from "@/services/productService";
 import { ProductDTO } from "@/services/api.types";
 
-interface Product extends ProductDTO {}
+interface Product extends ProductDTO {
+  category?: string;
+}
 
 export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,9 +23,10 @@ export default function Products() {
     data: productsData,
     isLoading,
     isError,
-  } = useQuery(["products", selectedCategory], () =>
-    productService.getProducts({ page: 1, limit: 50, status: 'active' })
-  );
+  } = useQuery({
+    queryKey: ["products", selectedCategory],
+    queryFn: () => productService.getProducts({ page: 1, limit: 50, status: "active" }),
+  });
 
   const products = productsData?.data ?? [];
 
@@ -36,11 +39,14 @@ export default function Products() {
     "Huiles"
   ];
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.origin_location?.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
+  const filteredProducts = products.filter((product) => {
+    const p = product as Product;
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.origin_location?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !selectedCategory || p.category === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
   const formatDate = (dateString: string) => {
@@ -58,12 +64,13 @@ export default function Products() {
       <main className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-foreground mb-4">
-              Produits Certifiés NFC
+          <div className="text-center mb-12 max-w-3xl mx-auto">
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium text-foreground mb-4">
+              Passeports produits (démo)
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              Découvrez tous les produits avec traçabilité complète Made in Côte d'Ivoire
+            <p className="text-lg sm:text-xl text-muted-foreground mb-8">
+              Lots fictifs ancrés sur des filières ivoiriennes : Soubré, Man, Korhogo, Bonoua, Bouaké… Scannez ou
+              ouvrez une fiche pour simuler l&apos;expérience consommateur.
             </p>
           </div>
 

@@ -42,10 +42,10 @@ const workflowSteps = [
 export default function Products() {
   const [selectedStep, setSelectedStep] = useState<string>("active");
 
-  const { data: productsData } = useQuery(
-    ["products"],
-    () => productService.getProducts({ page: 1, limit: 100 })
-  );
+  const { data: productsData } = useQuery({
+    queryKey: ["admin-products"],
+    queryFn: () => productService.getProducts({ page: 1, limit: 100 }),
+  });
 
   const allProducts = productsData?.data ?? [];
 

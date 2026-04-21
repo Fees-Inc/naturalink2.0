@@ -1,126 +1,126 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import nfcProductImage from "@/assets/nfc-product.jpg";
 
-export function FeaturedProductsSection() {
-const products = [
+type ShowcaseProduct = {
+  name: string;
+  description: string;
+  /** Photo uniquement si elle correspond au titre ; sinon omis = zone vide */
+  image?: string;
+  tags: string[];
+};
+
+/**
+ * Photos Unsplash uniquement quand le sujet est clair (cacao, café, NFC…).
+ * Pas d’image pour le cajou : les clichés libres prêtent souvent à confusion.
+ */
+const products: ShowcaseProduct[] = [
   {
     name: "Cacao",
-    description: "Traçabilité complète du cacao ivoirien, de la plantation à l'exportation, avec certification biologique et commerce équitable.",
-    image: "🍫",
-    tags: ["Bio", "Commerce Équitable"]
-  },
-  {
-    name: "Riz",
-    description: "Riz local cultivé dans les régions du Nord, avec suivi des pratiques agricoles durables et certification qualité.",
-    image: "🌾",
-    tags: ["Local", "Durable"]
-  },
-  {
-    name: "Igname",
-    description: "Igname fraîche des coopératives du Centre, avec traçabilité complète des méthodes de culture traditionnelles.",
-    image: "🍠",
-    tags: ["Traditionnel", "Frais"]
-  },
-  {
-    name: "Légumes",
-    description: "Légumes variés cultivés selon les pratiques agricoles responsables avec certification de qualité nutritionnelle.",
-    image: "🥬",
-    tags: ["Responsable", "Nutritif"]
+    description:
+      "Fèves et fermentation suivies du champ au séchage — filière Nawa / Sud-Comoé (démo).",
+    image:
+      "https://images.unsplash.com/photo-1614350296597-20e04c87821d?auto=format&fit=crop&w=900&q=85",
+    tags: ["Soubré", "Export", "NFC"],
   },
   {
     name: "Café",
-    description: "Café arabica et robusta cultivé dans les montagnes de l’Ouest, certifié durable et issu de petites exploitations.",
-    image: "☕",
-    tags: ["Durable", "Arôme Riche"]
+    description:
+      "Arabica des montagnes de l'Ouest : lavage, séchage et traçabilité lot par lot (démo).",
+    image:
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=900&q=85",
+    tags: ["Man", "Tonkpi", "Qualité"],
   },
   {
-    name: "Huile de Palme",
-    description: "Huile de palme rouge produite localement avec un contrôle strict de la durabilité et de l’impact environnemental.",
-    image: "🥥",
-    tags: ["Local", "Traçable"]
+    name: "Noix de cajou",
+    description:
+      "Tri et séchage au nord — chaîne jusqu'à l'unité de transformation (démo).",
+    tags: ["Korhogo", "Savanes", "Filière"],
   },
   {
-    name: "Banane",
-    description: "Banane douce et plantain cultivés dans le Sud, avec suivi logistique de la récolte à la distribution.",
-    image: "🍌",
-    tags: ["Énergie", "Export"]
+    name: "Igname & vivrier",
+    description:
+      "Tubercules et plantain : stockage, lots et livraison vers les marchés (démo).",
+    tags: ["Gbêkê", "Bouaké", "Frais"],
   },
   {
-    name: "Ananas",
-    description: "Ananas sucré de la région de Bonoua, certifié pour son goût unique et ses pratiques agricoles responsables.",
-    image: "🍍",
-    tags: ["Export", "Savoureux"]
+    name: "Maraîchage",
+    description:
+      "Légumes frais pour Abidjan et périphérie — récolte datée sur le passeport (démo).",
+    tags: ["Lagunes", "Bingerville", "Local"],
   },
   {
-    name: "Mangue",
-    description: "Mangue fraîche de saison avec traçabilité des vergers, respectant des normes de qualité internationale.",
-    image: "🥭",
-    tags: ["Saisonnière", "Qualité Premium"]
+    name: "Étiquette NFC",
+    description:
+      "Sticker sur l'emballage : scan instantané vers le passeport numérique (démo).",
+    image: nfcProductImage,
+    tags: ["VeChain", "Anti-fraude", "Simple"],
   },
-  {
-    name: "Noix de Cajou",
-    description: "Noix de cajou transformées localement avec certification qualité et traçabilité de la filière.",
-    image: "🌰",
-    tags: ["Local", "Export"]
-  },
-  {
-    name: "Poisson",
-    description: "Poisson frais issu de la pêche artisanale et de l’aquaculture durable en Côte d’Ivoire.",
-    image: "🐟",
-    tags: ["Fraîcheur", "Durable"]
-  },
-  {
-    name: "Poulet Fermier",
-    description: "Poulet élevé en plein air avec alimentation naturelle et certification sanitaire.",
-    image: "🍗",
-    tags: ["Naturel", "Traçable"]
-  }
 ];
 
-
+export function FeaturedProductsSection() {
   return (
     <section className="py-20 bg-secondary/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4">
-            Nos Produits Phares
+            Nos produits phares
           </Badge>
-          <h2 className="text-4xl font-bold text-foreground mb-4">
-            Nos Produits Certifiés
+          <h2 className="font-serif text-3xl sm:text-4xl font-medium text-foreground mb-4">
+            Filières certifiées (aperçu)
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Nous avons une large gamme de produits agricoles que nous avons exportés 
-            partout dans le monde vers des milliers de nos partenaires.
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
+            Une photo n&apos;est affichée que lorsqu&apos;elle illustre clairement la filière ; sinon la vignette reste
+            volontairement vide (aperçu démo).
           </p>
         </div>
 
-        {/* Product grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {products.map((product, index) => (
-            <Card key={index} className="group hover:shadow-medium transition-smooth cursor-pointer">
-              <CardContent className="p-6 text-center">
-                <div className="text-6xl mb-4">{product.image}</div>
-                <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                  {product.description}
-                </p>
-                <div className="flex flex-wrap gap-1 justify-center">
-                  {product.tags.map((tag, tagIndex) => (
-                    <Badge key={tagIndex} variant="secondary" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {products.map((product) => (
+            <Link key={product.name} to="/products" className="block group">
+              <Card className="h-full overflow-hidden border-border/80 shadow-sm hover:shadow-md transition-shadow">
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                  {product.image ? (
+                    <>
+                      <img
+                        src={product.image}
+                        alt=""
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        loading="lazy"
+                        decoding="async"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                      <span className="absolute bottom-3 left-3 right-3 text-lg font-semibold text-white drop-shadow-md">
+                        {product.name}
+                      </span>
+                    </>
+                  ) : (
+                    <div className="flex h-full min-h-[9rem] flex-col justify-end p-4">
+                      <span className="text-lg font-semibold text-foreground">{product.name}</span>
+                    </div>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
+                <CardContent className="p-4">
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{product.description}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {product.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
-        
+
         <div className="text-center">
-          <Button variant="outline" size="lg">
-            Voir tous nos produits
+          <Button asChild variant="outline" size="lg" className="rounded-full">
+            <Link to="/products">Voir tous les produits démo</Link>
           </Button>
         </div>
       </div>

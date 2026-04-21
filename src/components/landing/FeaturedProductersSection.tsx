@@ -21,7 +21,8 @@ interface Product {
   nutritionalScore: string;
   sustainability: number;
   traceabilitySteps: number;
-  productImage: string;
+  /** Absent = bandeau sans photo (ex. cajou : pas de cliché fiable en démo). */
+  productImage?: string;
 }
 
 export function FeaturedProductersSection() {
@@ -206,7 +207,6 @@ const products: Product[] = [
     nutritionalScore: "A",
     sustainability: 87,
     traceabilitySteps: 6,
-    productImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop"
   },
   {
     id: "11",
@@ -252,8 +252,8 @@ const products: Product[] = [
             Nos Produits Certifiés
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Nous avons une large gamme de produits agricoles que nous avons exportés 
-            partout dans le monde vers des milliers de nos partenaires.
+            Exemples de filières et de circuits : la démo met en avant des profils types de coopératives et de
+            producteurs ivoiriens, sans engagement contractuel.
           </p>
         </div>
 
@@ -278,11 +278,13 @@ const products: Product[] = [
                     <div className="relative">
                       {/* Image de fond du produit */}
                       <div className="h-48 bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 relative overflow-hidden">
-                        <img
-                          src={product.productImage}
-                          alt={product.name}
-                          className="w-full h-full object-cover opacity-80"
-                        />
+                        {product.productImage ? (
+                          <img
+                            src={product.productImage}
+                            alt=""
+                            className="w-full h-full object-cover opacity-80"
+                          />
+                        ) : null}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                         
                         {/* QR Code en overlay */}

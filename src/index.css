@@ -8,50 +8,52 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 24% 16%;
+    --background: 40 33% 99%;
+    --foreground: 152 35% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 24% 16%;
+    --card-foreground: 152 35% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 24% 16%;
+    --popover-foreground: 152 35% 14%;
 
-    --primary: 142 76% 36%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 142 76% 45%;
+    /* Vert forêt — identité agro / confiance */
+    --primary: 152 55% 22%;
+    --primary-foreground: 42 40% 98%;
+    --primary-glow: 152 48% 32%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 210 24% 16%;
+    --secondary: 35 30% 94%;
+    --secondary-foreground: 152 35% 14%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 35 25% 94%;
+    --muted-foreground: 152 12% 40%;
 
-    --accent: 47 96% 53%;
-    --accent-foreground: 210 24% 16%;
-    --accent-glow: 47 96% 63%;
+    /* Terracotta / orange — énergie & chaleur ivoirienne */
+    --accent: 18 85% 52%;
+    --accent-foreground: 42 40% 98%;
+    --accent-glow: 22 90% 58%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 142 76% 36%;
+    --border: 35 18% 88%;
+    --input: 35 18% 88%;
+    --ring: 152 55% 28%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
     /* Agriculture theme colors */
-    --nature-primary: 142 76% 36%;
-    --nature-secondary: 120 60% 50%;
-    --nature-tertiary: 47 96% 53%;
+    --nature-primary: 152 55% 22%;
+    --nature-secondary: 152 42% 36%;
+    --nature-tertiary: 18 85% 52%;
     --earth-brown: 30 25% 45%;
     --sky-blue: 200 95% 65%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
-    --gradient-nature: linear-gradient(135deg, hsl(142 76% 36%), hsl(120 60% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(120 60% 50%) 100%);
+    --gradient-nature: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--nature-secondary)));
+    --gradient-hero: linear-gradient(125deg, hsl(var(--primary)) 0%, hsl(152 42% 28%) 42%, hsl(var(--accent)) 100%);
 
     /* Shadows */
     --shadow-soft: 0 4px 6px -1px hsl(var(--primary) / 0.1);
@@ -125,7 +127,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

@@ -1,71 +1,59 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import supplyChainImage from "@/assets/supply-chain.jpg";
 
 export function StatsSection() {
   const stats = [
-    { value: "20,000+", label: "Producteurs partenaires" },
-    { value: "20+", label: "Coopératives connectées" }
+    { value: "6", label: "Filières démo (lots NFC)" },
+    { value: "48", label: "Producteurs simulés (dashboard)" },
+    { value: "100%", label: "Données de démonstration CI" },
   ];
 
   return (
     <section className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content */}
           <div>
-            <h2 className="text-4xl font-bold text-foreground mb-6 leading-tight">
-              Des milliers de personnes font confiance à nos produits agricoles
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium text-foreground mb-6 leading-tight">
+              Une base saine pour convaincre demain
             </h2>
-            
+
             <p className="text-lg text-muted-foreground mb-8">
-              Notre solution d'étiquetage intelligent est en cours de déploiement 
-              dans tout le pays pour vous, et juste vous.
+              Les chiffres affichés ici servent à illustrer le fonctionnement de la plateforme lors de nos pitchs et
+              entretiens,ils ne reflètent pas une base installée à grande échelle pour le moment.
             </p>
-            
-            {/* Stats */}
-            <div className="flex items-center gap-8 mb-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-3xl font-bold text-primary mb-1">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {stat.label}
-                  </div>
+
+            <div className="flex flex-wrap gap-8 mb-8">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center sm:text-left">
+                  <div className="text-3xl font-bold text-primary mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground max-w-[10rem]">{stat.label}</div>
                 </div>
               ))}
             </div>
-            
-            <Button variant="nature" size="lg" className="group">
-              Rejoindre NaturaLink
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-smooth" />
+
+            <Button asChild variant="default" size="lg" className="group rounded-full">
+              <Link to="/products">
+                Parcourir le catalogue démo
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-smooth" />
+              </Link>
             </Button>
           </div>
-          
-          {/* Image */}
+
           <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-large">
-              <img 
-                src={supplyChainImage} 
-                alt="Chaîne d'approvisionnement moderne"
-                className="w-full h-[400px] object-cover"
+            <div className="relative rounded-3xl overflow-hidden shadow-large ring-1 ring-border">
+              <img
+                src={supplyChainImage}
+                alt="Chaîne de valeur agricole"
+                className="w-full h-[min(400px,50vh)] object-cover sm:h-[400px]"
               />
-              
-              {/* Overlay elements */}
-              <div className="absolute inset-0 hero-gradient opacity-20"></div>
-              
-              {/* Floating elements */}
-              <div className="absolute top-6 left-6 bg-primary-foreground rounded-xl p-3 shadow-medium">
-                <div className="text-sm font-semibold text-primary">
-                  Traçabilité en temps réel
-                </div>
+              <div className="absolute inset-0 hero-gradient opacity-25" />
+              <div className="absolute top-6 left-6 rounded-xl bg-background/90 px-3 py-2 text-sm font-medium shadow-md backdrop-blur">
+                Pilote régional
               </div>
-              
-              <div className="absolute bottom-6 right-6 bg-accent rounded-xl p-3 shadow-medium">
-                <div className="text-sm font-semibold text-foreground">
-                  Blockchain VeChain
-                </div>
+              <div className="absolute bottom-6 right-6 rounded-xl bg-orange-500 text-white px-3 py-2 text-sm font-medium shadow-md">
+                Soubré · Man · Korhogo
               </div>
             </div>
           </div>

@@ -45,7 +45,7 @@ export function AppSidebar() {
   const handleLogout = async () => {
     await signOut();
     toast.success('Déconnexion réussie');
-    navigate('/admin/naturalink/login');
+    navigate("/admin/naturalink");
   };
 
   return (

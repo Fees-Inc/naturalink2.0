@@ -6,19 +6,19 @@ export function Footer() {
   const footerLinks = {
     product: [
       { label: "Fonctionnalités", href: "#" },
-      { label: "Tarifs", href: "#pricing" },
+      { label: "Tarifs", href: "/#pricing" },
       { label: "API", href: "#" },
       { label: "Documentation", href: "#" }
     ],
     company: [
       { label: "À propos", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Carrières", href: "#" },
-      { label: "Partenaires", href: "#" }
+      { label: "Blog", href: "/blog" },
+      { label: "Parcours startup", href: "/#reconnaissance" },
+      { label: "Produits démo", href: "/products" }
     ],
     support: [
       { label: "Centre d'aide", href: "#" },
-      { label: "Contact", href: "#contact" },
+      { label: "Contact", href: "/#contact" },
       { label: "Status", href: "#" },
       { label: "Formation", href: "#" }
     ]

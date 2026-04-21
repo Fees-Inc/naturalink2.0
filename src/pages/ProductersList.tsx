@@ -7,11 +7,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import ProducerCard from "@/components/ProducerCard";
-import producer1Img from "@/assets/producer-1.jpg";
-import producer2Img from "@/assets/producer-2.jpg";
-import producer3Img from "@/assets/producer-3.jpg";
-import producer4Img from "@/assets/producer-4.jpg";
-import producer5Img from "@/assets/producer-5.jpg";
+
+/** Unsplash — sujets alignés avec les fiches (même base que la section « produits phares »). */
+const PHOTO_CACAO =
+  "https://images.unsplash.com/photo-1614350296597-20e04c87821d?auto=format&fit=crop&w=1200&q=85";
+const PHOTO_CAFE =
+  "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85";
+const PHOTO_LEGUMES =
+"https://images.unsplash.com/photo-1614350296597-20e04c87821d?auto=format&fit=crop&w=1200&q=85";
 
 const ProducersList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,112 +23,76 @@ const ProducersList = () => {
   const [onlyOrganic, setOnlyOrganic] = useState(false);
   const [sortBy, setSortBy] = useState("rating");
 
-  // Mock data - en production, cela viendrait d'une API
+  // 5 producteurs démo — Côte d'Ivoire (visuels cohérents, pas de vignoble)
   const allProducers = [
     {
       id: "1",
-      name: "Ferme des Champs Dorés",
-      image: producer1Img,
-      specialties: ["Légumes Bio", "Fruits de Saison", "Œufs Fermiers"],
-      location: "Saint-Émilion, Gironde",
-      region: "Nouvelle-Aquitaine",
-      rating: 4.8,
-      reviewCount: 243,
+      name: "COOP-CAJOU du Poro",
+      specialties: ["Noix de cajou", "Karité", "Export"],
+      location: "Korhogo, Savanes",
+      region: "Savanes",
+      rating: 4.9,
+      reviewCount: 186,
       certificationLevel: "gold" as const,
-      organic: true,
-      description: "Producteur familial depuis 3 générations, spécialisé dans les produits biologiques de haute qualité."
+      organic: false,
+      description:
+        "Coopérative du nord : tri, séchage et traçabilité des noix de cajou vers les unités de transformation.",
     },
     {
       id: "2",
-      name: "Les Vergers de Provence",
-      image: producer2Img,
-      specialties: ["Fruits", "Huile d'Olive", "Miel"],
-      location: "Aix-en-Provence",
-      region: "Provence-Alpes-Côte d'Azur",
-      rating: 4.6,
-      reviewCount: 189,
-      certificationLevel: "silver" as const,
+      name: "Union cacao Nawa",
+      image: PHOTO_CACAO,
+      specialties: ["Cacao", "Fermentation", "Qualité export"],
+      location: "Soubré, Bas-Sassandra",
+      region: "Bas-Sassandra",
+      rating: 4.8,
+      reviewCount: 241,
+      certificationLevel: "gold" as const,
       organic: true,
-      description: "Vergers traditionnels cultivés en agriculture raisonnée, produisant des fruits d'exception."
+      description:
+        "Fèves de cacao du champ au séchage ; lots pilotes avec étiquettes NFC pour la filière locale.",
     },
     {
       id: "3",
-      name: "Domaine du Petit Bois",
-      image: producer3Img,
-      specialties: ["Fromages", "Produits Laitiers", "Viande"],
-      location: "Normandie",
-      region: "Normandie",
-      rating: 4.9,
-      reviewCount: 412,
-      certificationLevel: "gold" as const,
-      organic: false,
-      description: "Élevage responsable et production artisanale de produits laitiers d'excellence."
+      name: "Coopérative café du Tonkpi",
+      image: PHOTO_CAFE,
+      specialties: ["Café arabica", "Lavé", "Montagne"],
+      location: "Man, Montagnes",
+      region: "Montagnes",
+      rating: 4.7,
+      reviewCount: 132,
+      certificationLevel: "silver" as const,
+      organic: true,
+      description:
+        "Petits producteurs de l'Ouest : récolte sélective et traçabilité des lots pour le torréfacteur.",
     },
     {
       id: "4",
-      name: "Maraîchers du Soleil",
-      image: producer4Img,
-      specialties: ["Tomates Anciennes", "Légumes du Sud", "Aromates"],
-      location: "Nice, Alpes-Maritimes",
-      region: "Provence-Alpes-Côte d'Azur",
-      rating: 4.7,
-      reviewCount: 156,
-      certificationLevel: "bronze" as const,
+      name: "GIE maraîchers de Bingerville",
+      image: PHOTO_LEGUMES,
+      specialties: ["Légumes frais", "Circuit court", "Abidjan"],
+      location: "Bingerville, Lagunes",
+      region: "Lagunes",
+      rating: 4.6,
+      reviewCount: 94,
+      certificationLevel: "silver" as const,
       organic: true,
-      description: "Cultivation traditionnelle de variétés anciennes et rares de légumes méditerranéens."
+      description:
+        "Maraîchage périurbain pour les marchés d'Abidjan : tomates, aubergines, salades, dates de récolte suivies.",
     },
     {
       id: "5",
-      name: "La Bergerie des Monts",
-      image: producer5Img,
-      specialties: ["Agneau", "Laine", "Charcuterie"],
-      location: "Lozère",
-      region: "Occitanie",
-      rating: 4.5,
-      reviewCount: 98,
-      certificationLevel: "silver" as const,
-      organic: false,
-      description: "Élevage extensif en montagne, respectueux du bien-être animal et de l'environnement."
-    },
-    {
-      id: "6",
-      name: "Jardins de la Loire",
-      image: producer1Img,
-      specialties: ["Légumes Primeurs", "Asperges", "Fraises"],
-      location: "Tours, Indre-et-Loire",
-      region: "Centre-Val de Loire",
-      rating: 4.4,
-      reviewCount: 67,
-      certificationLevel: "bronze" as const,
-      organic: true,
-      description: "Maraîchage traditionnel en bord de Loire, spécialisé dans les primeurs."
-    },
-    {
-      id: "7",
-      name: "Ferme du Bonheur",
-      image: producer2Img,
-      specialties: ["Volailles", "Œufs", "Légumes"],
-      location: "Bretagne",
-      region: "Bretagne",
-      rating: 4.9,
-      reviewCount: 320,
+      name: "Coopérative vivrière du Gbêkê",
+      specialties: ["Igname", "Manioc", "Plantain"],
+      location: "Bouaké, Gbêkê",
+      region: "Gbêkê",
+      rating: 4.8,
+      reviewCount: 203,
       certificationLevel: "gold" as const,
-      organic: true,
-      description: "Agriculture biologique et élevage en plein air dans le respect de la nature."
-    },
-    {
-      id: "8",
-      name: "Vignoble des Côteaux",
-      image: producer3Img,
-      specialties: ["Vin", "Raisin de Table", "Jus de Fruits"],
-      location: "Bordeaux",
-      region: "Nouvelle-Aquitaine",
-      rating: 4.7,
-      reviewCount: 178,
-      certificationLevel: "silver" as const,
       organic: false,
-      description: "Domaine viticole familial produisant des vins d'excellence."
-    }
+      description:
+        "Vivrier régional : tubercules et plantain, stockage ventilé et lots tracés vers les grossistes.",
+    },
   ];
 
   // Filtrage et tri
@@ -152,7 +119,7 @@ const ProducersList = () => {
       }
     });
 
-  const regions = ["all", "Nouvelle-Aquitaine", "Provence-Alpes-Côte d'Azur", "Normandie", "Occitanie", "Centre-Val de Loire", "Bretagne"];
+  const regions = ["all", "Lagunes", "Bas-Sassandra", "Savanes", "Montagnes", "Gbêkê"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -313,7 +280,8 @@ const ProducersList = () => {
             Nos Producteurs Certifiés
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-           Derrière chaque produit, il y a un producteur engagé. Ensemble, nous avons déjà partagé la richesse agricole de notre terre avec des milliers de partenaires à travers le monde.
+            Derrière chaque produit, il y a un producteur engagé. Ces fiches illustrent le type d&apos;informations
+            visibles dans le passeport numérique Naturalink (données de démonstration).
           </p>
         </div>
 

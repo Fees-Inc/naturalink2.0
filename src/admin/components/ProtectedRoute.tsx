@@ -16,7 +16,8 @@ export const ProtectedRoute = ({ children, requiredRole = 'admin' }: ProtectedRo
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    const loginPath = location.pathname.startsWith('/admin/naturalink') ? '/admin/naturalink' : '/auth';
+    return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
   if (requiredRole && profile?.role !== requiredRole) {

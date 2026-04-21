@@ -21,10 +21,10 @@ import { dashboardService } from "@/services/dashboardService";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const { data: dashboardStats, isLoading } = useQuery(
-    ["dashboardStats"],
-    () => dashboardService.getStats()
-  );
+  const { data: dashboardStats, isLoading } = useQuery({
+    queryKey: ["dashboardStats"],
+    queryFn: () => dashboardService.getStats(),
+  });
 
   const stats = [
     {
@@ -33,16 +33,16 @@ export default function Dashboard() {
       subtitle: `${dashboardStats?.verified_producers || 0} vérifiés`,
       icon: <Wheat className="h-5 w-5" />,
       trend: { value: dashboardStats?.month_over_month_growth || 0, isPositive: true },
-      onClick: () => navigate("producers"),
+      onClick: () => navigate("/admin/naturalink/producers"),
       color: "primary" as const,
     },
     {
-      title: "Coopératives",
-      value: "22",
-      subtitle: "3 en attente de validation",
+      title: "Coopératives (démo)",
+      value: "12",
+      subtitle: "2 fiches en complétion",
       icon: <Users className="h-5 w-5" />,
       trend: { value: 8, isPositive: true },
-      onClick: () => navigate("producers"),
+      onClick: () => navigate("/admin/naturalink/producers"),
       color: "success" as const,
     },
     {
@@ -51,7 +51,7 @@ export default function Dashboard() {
       subtitle: `${dashboardStats?.active_transactions || 0} transactions`,
       icon: <Package className="h-5 w-5" />,
       trend: { value: 15, isPositive: true },
-      onClick: () => navigate("products"),
+      onClick: () => navigate("/admin/naturalink/products"),
       color: "accent" as const,
     },
     {
@@ -60,7 +60,7 @@ export default function Dashboard() {
       subtitle: "2 nouveaux ce mois",
       icon: <Building2 className="h-5 w-5" />,
       trend: { value: 20, isPositive: true },
-      onClick: () => navigate("distributors"),
+      onClick: () => navigate("/admin/naturalink/distributors"),
       color: "warning" as const,
     },
   ];

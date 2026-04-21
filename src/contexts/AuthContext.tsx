@@ -38,7 +38,7 @@ export interface AuthContextType {
     lastName?: string,
     role?: UserRole
   ) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: any; profile?: Profile | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
 }
@@ -52,7 +52,7 @@ const fallbackAuthContext: AuthContextType = {
   isAuthenticated: false,
   hasRole: () => false,
   signUp: async () => ({ error: missingProviderError }),
-  signIn: async () => ({ error: missingProviderError }),
+  signIn: async () => ({ error: missingProviderError, profile: null }),
   signOut: async () => {
     // no-op
   },
@@ -63,6 +63,29 @@ let didWarnMissingProvider = false;
 
 const AuthContext = createContext<AuthContextType>(fallbackAuthContext);
 
+/** Connexion démo sans backend (présentation) */
+export const DEMO_AUTH_TOKEN = 'naturalink-demo-session';
+
+const DEMO_PASSWORD = 'demo2026';
+
+function buildDemoAdminProfile(email: string): Profile {
+  return {
+    id: 'profile-demo-admin',
+    user_id: 'user-demo-admin',
+    email,
+    first_name: 'Admin',
+    last_name: 'Démo',
+    company_name: 'Naturalink',
+    role: 'admin',
+    location: 'Abidjan, Côte d\'Ivoire',
+    phone: '+225 01 03 57 59 66',
+    is_verified: true,
+    kyc_status: 'verified',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -70,11 +93,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      const token = typeof window !== 'undefined' ? window.localStorage.getItem('naturalink_auth_token') : null;
+      if (token === DEMO_AUTH_TOKEN) {
+        const email = window.localStorage.getItem('naturalink_demo_email') || 'demo@naturalink.ci';
+        setUser({ id: 'user-demo-admin', email });
+        setProfile(buildDemoAdminProfile(email));
+        setLoading(false);
+        return;
+      }
+
       try {
         const authData = await apiClient.get<{ user: AuthUser; profile: Profile }>('/auth/me');
         setUser(authData.user);
         setProfile(authData.profile);
-      } catch (error) {
+      } catch {
         setAuthToken(null);
         setUser(null);
         setProfile(null);
@@ -112,6 +144,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    const normalized = email.trim().toLowerCase();
+    const isDemoEmail =
+      normalized === 'demo@naturalink.ci' ||
+      normalized === 'admin@naturalink.ci' ||
+      normalized === 'admin@gmail.com';
+
+    if (isDemoEmail && password === DEMO_PASSWORD) {
+      setAuthToken(DEMO_AUTH_TOKEN);
+      window.localStorage.setItem('naturalink_demo_email', email.trim());
+      const demoProfile = buildDemoAdminProfile(email.trim());
+      setUser({ id: 'user-demo-admin', email: email.trim() });
+      setProfile(demoProfile);
+      return { error: null, profile: demoProfile };
+    }
+
     try {
       const data = await apiClient.post<{ access_token: string; user: AuthUser; profile: Profile }>('/auth/login', {
         email,
@@ -121,14 +168,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setAuthToken(data.access_token);
       setUser(data.user);
       setProfile(data.profile);
-      return { error: null };
+      return { error: null, profile: data.profile };
     } catch (error: any) {
-      return { error: error?.response?.data?.message || error?.message || 'Unable to sign in' };
+      return {
+        error: error?.response?.data?.message || error?.message || 'Unable to sign in',
+        profile: null,
+      };
     }
   };
 
   const signOut = async () => {
     setAuthToken(null);
+    window.localStorage.removeItem('naturalink_demo_email');
     setUser(null);
     setProfile(null);
   };

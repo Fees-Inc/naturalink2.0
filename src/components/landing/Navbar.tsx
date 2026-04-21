@@ -33,9 +33,18 @@ export function Navbar() {
             <Link to="/blog" className="text-foreground hover:text-primary transition-smooth">
               Blog
             </Link>
-            <a href="#contact" className="text-foreground hover:text-primary transition-smooth">
+            <Link
+              to={{ pathname: "/", hash: "reconnaissance" }}
+              className="text-foreground hover:text-primary transition-smooth"
+            >
+              Parcours
+            </Link>
+            <Link
+              to={{ pathname: "/", hash: "contact" }}
+              className="text-foreground hover:text-primary transition-smooth"
+            >
               Contact
-            </a>
+            </Link>
           </div>
           
           {/* Auth/Profile Section */}
@@ -67,14 +76,9 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <>
-                {/* <Button variant="ghost" size="sm" disabled={true}>
-                  Connexion
-                </Button> */}
-                <Button variant="hero" size="sm" disabled={true}>
-                  Vous êtes connecté à la version test
-                </Button>
-              </>
+              <Button variant="outline" size="sm" className="border-primary/30" asChild>
+                <Link to="/admin/naturalink">Démo dashboard</Link>
+              </Button>
             )}
           </div>
           
@@ -100,9 +104,20 @@ export function Navbar() {
               <Link to="/blog" className="text-foreground hover:text-primary transition-smooth">
                 Blog
               </Link>
-              <a href="#contact" className="text-foreground hover:text-primary transition-smooth">
+              <Link
+                to={{ pathname: "/", hash: "reconnaissance" }}
+                className="text-foreground hover:text-primary transition-smooth"
+                onClick={() => setIsOpen(false)}
+              >
+                Parcours
+              </Link>
+              <Link
+                to={{ pathname: "/", hash: "contact" }}
+                className="text-foreground hover:text-primary transition-smooth"
+                onClick={() => setIsOpen(false)}
+              >
                 Contact
-              </a>
+              </Link>
               {user ? (
                 <>
                   <Button variant="outline" size="sm" className="w-full" onClick={() => navigate(`/${profile?.role}`)}>

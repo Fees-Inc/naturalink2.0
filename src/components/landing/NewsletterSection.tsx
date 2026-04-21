@@ -13,7 +13,7 @@ export function NewsletterSection() {
   };
 
   return (
-    <section className="py-20 relative overflow-hidden">
+    <section id="contact" className="py-20 relative overflow-hidden scroll-mt-28">
       {/* Background */}
       <div className="absolute inset-0 hero-gradient"></div>
       

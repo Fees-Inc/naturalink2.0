@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import cooperativeImage from "@/assets/cooperative-farmers.jpg";
 
 export function StorySection() {
@@ -59,13 +60,13 @@ export function StorySection() {
                 VeChain pour apporter une traçabilité complète aux produits agricoles, 
                 avec une couverture nationale. Notre mission est de donner les meilleurs 
                 outils pour permettre aux producteurs d'être plus transparents sur leurs 
-                pratiques agricoles pour nos consommateurs locaux et nos partenaires 
-                internationaux.
+                pratiques agricoles pour les consommateurs locaux, la grande distribution et
+                l&apos;export — avec des preuves vérifiables à chaque étape.
               </p>
             </div>
             
-            <Button variant="nature" size="lg">
-              En savoir plus
+            <Button asChild variant="nature" size="lg" className="rounded-full">
+              <Link to="/products">Voir un passeport produit (démo)</Link>
             </Button>
           </div>
         </div>

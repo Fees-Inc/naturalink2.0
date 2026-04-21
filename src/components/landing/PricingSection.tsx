@@ -71,7 +71,7 @@ export function PricingSection() {
         "API de traçabilité complète",
         "Analytics avancés",
         "Monitoring chaîne d'approvisionnement",
-        "Gestion des partenaires coopératives",
+        "Gestion multi-coopératives (lots & droits)",
         "Outils logistiques intelligents",
         "Support prioritaire 24/7"
       ],
@@ -83,7 +83,7 @@ export function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="py-20 bg-secondary/30">
+    <section id="pricing" className="py-20 bg-secondary/30 scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4">

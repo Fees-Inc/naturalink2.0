@@ -14,21 +14,21 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const { signIn, profile } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state?.from?.pathname || "/admin/naturalink/dashboard";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await signIn(email, password);
+    const { error, profile: signedProfile } = await signIn(email, password);
 
     if (error) {
       toast.error('Identifiants incorrects ou problème de connexion.');
       return;
     }
 
-    if (profile?.role !== 'admin') {
+    if (signedProfile?.role !== 'admin') {
       toast.error('Accès réservé aux administrateurs.');
       return;
     }
@@ -89,9 +89,9 @@ const Login = () => {
             </div>
             
             <div className="space-y-2">
-              <h2 className="text-2xl font-semibold text-foreground">Bienvenue sur page admin de Naturalink</h2>
+              <h2 className="text-2xl font-semibold text-foreground">Espace d&apos;administration (démo)</h2>
               <p className="text-muted-foreground">
-                Connectez-vous pour accéder à votre espace de traçabilité intelligente
+                Présentation : connexion simulée sans backend, avec données ivoiriennes fictives.
               </p>
             </div>
           </div>
@@ -134,8 +134,12 @@ const Login = () => {
             </Button>
 
             {/* Demo credentials */}
-            <p className="text-sm text-muted-foreground text-center">
-              Identifiants de démonstration: <span className="font-medium">admin@gmail.com</span> / <span className="font-medium">admin</span>
+            <p className="text-sm text-muted-foreground text-center leading-relaxed">
+              Démo :{' '}
+              <span className="font-medium">demo@naturalink.ci</span> ou{' '}
+              <span className="font-medium">admin@naturalink.ci</span>
+              <br />
+              Mot de passe : <span className="font-mono font-medium">demo2026</span>
             </p>
 
             {/* Google Login */}
